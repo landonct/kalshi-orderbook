@@ -9,5 +9,11 @@ markets_data = markets_response.json()
 
 markets_json = pd.read_json(markets_url).markets
 
-for col in markets_json:
-    col.get("custom_strike", {}).get("Word")
+row = []
+word = []
+data = pd.DataFrame()
+for row in markets_json:
+    word.append(row.get("custom_strike", {}).get("Word"))
+    print(word)
+
+data['word'] = word
