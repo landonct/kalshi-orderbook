@@ -8,3 +8,6 @@ markets_response = requests.get(markets_url)
 markets_data = markets_response.json()
 
 markets_json = pd.read_json(markets_url).markets
+
+for col in markets_json:
+    col.get("custom_strike", {}).get("Word")
