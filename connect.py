@@ -17,3 +17,9 @@ for row in markets_json:
     print(word)
 
 data['word'] = word
+
+with open("out_test.txt", "w") as f:
+    for row in range(len(markets_json)):
+        for keys, values in markets_json.iloc[row].items():
+            print(f"{keys}: {values}", file=f)
+        print("\n ================================= \n", file=f)

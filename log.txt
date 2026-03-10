@@ -1,0 +1,1357 @@
+for col in markets_json:
+    print(col)
+    break
+
+# {'can_close_early': True, 'close_time': '2026-03-19T14:00:00Z', 'created_time': '2026-02-24T15:22:16.990021Z', 'custom_strike': {'Word': 'Citrini'}, 'early_close_condition': 'This market will close and expire early if the event occurs.', 'event_ticker': 'KXFEDMENTION-26MAR', 'expected_expiration_time': '2026-03-19T14:00:00Z', 'expiration_time': '2026-03-19T14:00:00Z', 'expiration_value': '', 'fractional_trading_enabled': False, 'last_price': 7, 'last_price_dollars': '0.0700', 'latest_expiration_time': '2026-03-19T14:00:00Z', 'liquidity': 0, 'liquidity_dollars': '0.0000', 'market_type': 'binary', 'no_ask': 93, 'no_ask_dollars': '0.9300', 'no_bid': 92, 'no_bid_dollars': '0.9200', 'no_sub_title': 'Citrini', 'notional_value': 100, 'notional_value_dollars': '1.0000', 'open_interest': 1235, 'open_interest_fp': '1235.00', 'open_time': '2026-02-24T16:00:00Z', 'previous_price': 7, 'previous_price_dollars': '0.0700', 'previous_yes_ask': 8, 'previous_yes_ask_dollars': '0.0800', 'previous_yes_bid': 7, 'previous_yes_bid_dollars': '0.0700', 'price_level_structure': 'linear_cent', 'price_ranges': [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}], 'response_price_units': 'usd_cent', 'result': '', 'rules_primary': 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.', 'rules_secondary': 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.', 'settlement_timer_seconds': 1800, 'status': 'active', 'strike_type': 'custom', 'subtitle': '', 'tick_size': 1, 'ticker': 'KXFEDMENTION-26MAR-CITR', 'title': 'Will Powell say Citrini at his Mar 2026 press conference?', 'updated_time': '2026-02-24T16:00:00.495221Z', 'volume': 5389, 'volume_24h': 245, 'volume_24h_fp': '245.00', 'volume_fp': '5389.00', 'yes_ask': 8, 'yes_ask_dollars': '0.0800', 'yes_bid': 7, 'yes_bid_dollars': '0.0700', 'yes_sub_title': 'Citrini'}
+for col in markets_json:
+    col.get("custom_strike", {}).get("Word")
+
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+for col in markets_json:
+    col.get("custom_strike", {}).get("Word")
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+for col in markets_json:
+    tmp = col.get("custom_strike", {}).get("Word")
+    print(tmp)
+# Judy Shelton
+# Citrini
+# Kalshi
+# Yield Curve
+# Volatility
+# Unchanged
+# Uncertainty
+# Trump
+# Trade War
+# Tax
+# Tariff Inflation
+# Stagflation
+# Softening
+# Soft Landing
+# Shutdown / Shut Down
+# Restrictive
+# Renovation
+# Recession
+# QT / Quantitative Tightening
+# QE / Quantitative Easing
+# Projection
+# Probability
+# President
+# Pardon
+# Pandemic
+# National Debt
+# Median
+# Layoff
+# Lawsuit
+# Goods inflation
+# Good Afternoon
+# Gold
+# Gas / Gasoline / Natural Gas
+# Expectation
+# Egg
+# Dot Plot
+# Dissent
+# Credit
+# Consumer Confidence
+# Bitcoin
+# Beige Book
+# Balance of Risk
+# Balance Sheet
+# Anchor / Anchored
+# AI / Artificial Intelligence
+# ADP
+data = pd.DataFrame()
+data
+# Empty DataFrame
+Columns: []
+Index: []
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+data = pd.DataFrame()
+for col in markets_json:
+    word = col.get("custom_strike", {}).get("Word")
+    data['word'] = word
+    print(word)
+# Judy Shelton
+# Citrini
+# Kalshi
+# Yield Curve
+# Volatility
+# Unchanged
+# Uncertainty
+# Trump
+# Trade War
+# Tax
+# Tariff Inflation
+# Stagflation
+# Softening
+# Soft Landing
+# Shutdown / Shut Down
+# Restrictive
+# Renovation
+# Recession
+# QT / Quantitative Tightening
+# QE / Quantitative Easing
+# Projection
+# Probability
+# President
+# Pardon
+# Pandemic
+# National Debt
+# Median
+# Layoff
+# Lawsuit
+# Goods inflation
+# Good Afternoon
+# Gold
+# Gas / Gasoline / Natural Gas
+# Expectation
+# Egg
+# Dot Plot
+# Dissent
+# Credit
+# Consumer Confidence
+# Bitcoin
+# Beige Book
+# Balance of Risk
+# Balance Sheet
+# Anchor / Anchored
+# AI / Artificial Intelligence
+# ADP
+data
+# Empty DataFrame
+Columns: [word]
+Index: []
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+data = pd.DataFrame()
+for col in markets_json:
+    word = []
+    word.append(col.get("custom_strike", {}).get("Word"))
+    data['word'] = word
+    print(word)
+# ['Judy Shelton']
+# ['Citrini']
+# ['Kalshi']
+# ['Yield Curve']
+# ['Volatility']
+# ['Unchanged']
+# ['Uncertainty']
+# ['Trump']
+# ['Trade War']
+# ['Tax']
+# ['Tariff Inflation']
+# ['Stagflation']
+# ['Softening']
+# ['Soft Landing']
+# ['Shutdown / Shut Down']
+# ['Restrictive']
+# ['Renovation']
+# ['Recession']
+# ['QT / Quantitative Tightening']
+# ['QE / Quantitative Easing']
+# ['Projection']
+# ['Probability']
+# ['President']
+# ['Pardon']
+# ['Pandemic']
+# ['National Debt']
+# ['Median']
+# ['Layoff']
+# ['Lawsuit']
+# ['Goods inflation']
+# ['Good Afternoon']
+# ['Gold']
+# ['Gas / Gasoline / Natural Gas']
+# ['Expectation']
+# ['Egg']
+# ['Dot Plot']
+# ['Dissent']
+# ['Credit']
+# ['Consumer Confidence']
+# ['Bitcoin']
+# ['Beige Book']
+# ['Balance of Risk']
+# ['Balance Sheet']
+# ['Anchor / Anchored']
+# ['AI / Artificial Intelligence']
+# ['ADP']
+data
+#   word
+0  ADP
+word
+# ['ADP']
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+word = []
+data = pd.DataFrame()
+for col in markets_json:
+    word.append(col.get("custom_strike", {}).get("Word"))
+    data['word'] = word
+    print(word)
+# ['Judy Shelton']
+# ValueError: Length of values (2) does not match length of index (1)
+# Cell In[48], line 16
+#      14 for col in markets_json:
+#      15     word.append(col.get("custom_strike", {}).get("Word"))
+# ---> 16     data['word'] = word
+#      17     print(word)
+# File ~/anaconda3/lib/python3.11/site-packages/pandas/core/frame.py:3950 ([object Object]) , in DataFrame.__setitem__(self, key, value)
+#    3947     self._setitem_array([key], value)
+#    3948 else:
+#    3949     # set column
+# -> 3950     self._set_item(key, value)
+# 
+# File ~/anaconda3/lib/python3.11/site-packages/pandas/core/frame.py:4143 ([object Object]) , in DataFrame._set_item(self, key, value)
+#    4133 def _set_item(self, key, value) -> None:
+#    4134     """
+#    4135     Add series to DataFrame in specified column.
+#    4136 
+#    (...)
+#    4141     ensure homogeneity.
+#    4142     """
+# -> 4143     value = self._sanitize_column(value)
+#    4145     if (
+#    4146         key in self.columns
+#    4147         and value.ndim == 1
+#    4148         and not is_extension_array_dtype(value)
+#    4149     ):
+#    4150         # broadcast across multiple columns if necessary
+#    4151         if not self.columns.is_unique or isinstance(self.columns, MultiIndex):
+# 
+# File ~/anaconda3/lib/python3.11/site-packages/pandas/core/frame.py:4870 ([object Object]) , in DataFrame._sanitize_column(self, value)
+#    4867     return _reindex_for_setitem(Series(value), self.index)
+#    4869 if is_list_like(value):
+# -> 4870     com.require_length_match(value, self.index)
+#    4871 return sanitize_array(value, self.index, copy=True, allow_2d=True)
+# 
+# File ~/anaconda3/lib/python3.11/site-packages/pandas/core/common.py:576 ([object Object]) , in require_length_match(data, index)
+#     572 """
+#     573 Check the length of data matches the length of the index.
+#     574 """
+#     575 if len(data) != len(index):
+# --> 576     raise ValueError(
+#     577         "Length of values "
+#     578         f"({len(data)}) "
+#     579         "does not match length of index "
+#     580         f"({len(index)})"
+#     581     )
+word
+# ['Judy Shelton', 'Citrini']
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+word = []
+data = pd.DataFrame()
+for col in markets_json:
+    word.append(col.get("custom_strike", {}).get("Word"))
+    print(word)
+
+data['word'] = word
+# ['Judy Shelton']
+# ['Judy Shelton', 'Citrini']
+# ['Judy Shelton', 'Citrini', 'Kalshi']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence', 'ADP']
+data
+#                             word
+0                   Judy Shelton
+1                        Citrini
+2                         Kalshi
+3                    Yield Curve
+4                     Volatility
+5                      Unchanged
+6                    Uncertainty
+7                          Trump
+8                      Trade War
+9                            Tax
+10              Tariff Inflation
+11                   Stagflation
+12                     Softening
+13                  Soft Landing
+14          Shutdown / Shut Down
+15                   Restrictive
+16                    Renovation
+17                     Recession
+18  QT / Quantitative Tightening
+19      QE / Quantitative Easing
+20                    Projection
+21                   Probability
+22                     President
+23                        Pardon
+24                      Pandemic
+25                 National Debt
+26                        Median
+27                        Layoff
+28                       Lawsuit
+29               Goods inflation
+30                Good Afternoon
+31                          Gold
+32  Gas / Gasoline / Natural Gas
+33                   Expectation
+34                           Egg
+35                      Dot Plot
+36                       Dissent
+37                        Credit
+38           Consumer Confidence
+39                       Bitcoin
+40                    Beige Book
+41               Balance of Risk
+42                 Balance Sheet
+43             Anchor / Anchored
+44  AI / Artificial Intelligence
+45                           ADP
+np.array()
+# TypeError: array() missing required argument 'object' (pos 0)
+# Cell In[52], line 1
+# ----> 1 np.array()
+np.arange(1)
+# array([0])
+np.arange(1).append(1)
+# AttributeError: 'numpy.ndarray' object has no attribute 'append'
+# Cell In[54], line 1
+# ----> 1 np.arange(1).append(1)
+arr = np.arange(1)
+data
+#                             word
+0                   Judy Shelton
+1                        Citrini
+2                         Kalshi
+3                    Yield Curve
+4                     Volatility
+5                      Unchanged
+6                    Uncertainty
+7                          Trump
+8                      Trade War
+9                            Tax
+10              Tariff Inflation
+11                   Stagflation
+12                     Softening
+13                  Soft Landing
+14          Shutdown / Shut Down
+15                   Restrictive
+16                    Renovation
+17                     Recession
+18  QT / Quantitative Tightening
+19      QE / Quantitative Easing
+20                    Projection
+21                   Probability
+22                     President
+23                        Pardon
+24                      Pandemic
+25                 National Debt
+26                        Median
+27                        Layoff
+28                       Lawsuit
+29               Goods inflation
+30                Good Afternoon
+31                          Gold
+32  Gas / Gasoline / Natural Gas
+33                   Expectation
+34                           Egg
+35                      Dot Plot
+36                       Dissent
+37                        Credit
+38           Consumer Confidence
+39                       Bitcoin
+40                    Beige Book
+41               Balance of Risk
+42                 Balance Sheet
+43             Anchor / Anchored
+44  AI / Artificial Intelligence
+45                           ADP
+markets_json
+# 0     {'can_close_early': True, 'close_time': '2026-...
+# 1     {'can_close_early': True, 'close_time': '2026-...
+# 2     {'can_close_early': True, 'close_time': '2026-...
+# 3     {'can_close_early': True, 'close_time': '2026-...
+# 4     {'can_close_early': True, 'close_time': '2026-...
+# 5     {'can_close_early': True, 'close_time': '2026-...
+# 6     {'can_close_early': True, 'close_time': '2026-...
+# 7     {'can_close_early': True, 'close_time': '2026-...
+# 8     {'can_close_early': True, 'close_time': '2026-...
+# 9     {'can_close_early': True, 'close_time': '2026-...
+# 10    {'can_close_early': True, 'close_time': '2026-...
+# 11    {'can_close_early': True, 'close_time': '2026-...
+# 12    {'can_close_early': True, 'close_time': '2026-...
+# 13    {'can_close_early': True, 'close_time': '2026-...
+# 14    {'can_close_early': True, 'close_time': '2026-...
+# 15    {'can_close_early': True, 'close_time': '2026-...
+# 16    {'can_close_early': True, 'close_time': '2026-...
+# 17    {'can_close_early': True, 'close_time': '2026-...
+# 18    {'can_close_early': True, 'close_time': '2026-...
+# 19    {'can_close_early': True, 'close_time': '2026-...
+# 20    {'can_close_early': True, 'close_time': '2026-...
+# 21    {'can_close_early': True, 'close_time': '2026-...
+# 22    {'can_close_early': True, 'close_time': '2026-...
+# 23    {'can_close_early': True, 'close_time': '2026-...
+# 24    {'can_close_early': True, 'close_time': '2026-...
+# 25    {'can_close_early': True, 'close_time': '2026-...
+# 26    {'can_close_early': True, 'close_time': '2026-...
+# 27    {'can_close_early': True, 'close_time': '2026-...
+# 28    {'can_close_early': True, 'close_time': '2026-...
+# 29    {'can_close_early': True, 'close_time': '2026-...
+# 30    {'can_close_early': True, 'close_time': '2026-...
+# 31    {'can_close_early': True, 'close_time': '2026-...
+# 32    {'can_close_early': True, 'close_time': '2026-...
+# 33    {'can_close_early': True, 'close_time': '2026-...
+# 34    {'can_close_early': True, 'close_time': '2026-...
+# 35    {'can_close_early': True, 'close_time': '2026-...
+# 36    {'can_close_early': True, 'close_time': '2026-...
+# 37    {'can_close_early': True, 'close_time': '2026-...
+# 38    {'can_close_early': True, 'close_time': '2026-...
+# 39    {'can_close_early': True, 'close_time': '2026-...
+# 40    {'can_close_early': True, 'close_time': '2026-...
+# 41    {'can_close_early': True, 'close_time': '2026-...
+# 42    {'can_close_early': True, 'close_time': '2026-...
+# 43    {'can_close_early': True, 'close_time': '2026-...
+# 44    {'can_close_early': True, 'close_time': '2026-...
+# 45    {'can_close_early': True, 'close_time': '2026-...
+# Name: markets, dtype: object
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+row = []
+word = []
+data = pd.DataFrame()
+for row in markets_json:
+    word.append(row.get("custom_strike", {}).get("Word"))
+    print(word)
+
+data['word'] = word
+# ['Judy Shelton']
+# ['Judy Shelton', 'Citrini']
+# ['Judy Shelton', 'Citrini', 'Kalshi']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence', 'ADP']
+data
+#                             word
+0                   Judy Shelton
+1                        Citrini
+2                         Kalshi
+3                    Yield Curve
+4                     Volatility
+5                      Unchanged
+6                    Uncertainty
+7                          Trump
+8                      Trade War
+9                            Tax
+10              Tariff Inflation
+11                   Stagflation
+12                     Softening
+13                  Soft Landing
+14          Shutdown / Shut Down
+15                   Restrictive
+16                    Renovation
+17                     Recession
+18  QT / Quantitative Tightening
+19      QE / Quantitative Easing
+20                    Projection
+21                   Probability
+22                     President
+23                        Pardon
+24                      Pandemic
+25                 National Debt
+26                        Median
+27                        Layoff
+28                       Lawsuit
+29               Goods inflation
+30                Good Afternoon
+31                          Gold
+32  Gas / Gasoline / Natural Gas
+33                   Expectation
+34                           Egg
+35                      Dot Plot
+36                       Dissent
+37                        Credit
+38           Consumer Confidence
+39                       Bitcoin
+40                    Beige Book
+41               Balance of Risk
+42                 Balance Sheet
+43             Anchor / Anchored
+44  AI / Artificial Intelligence
+45                           ADP
+markets_json
+# 0     {'can_close_early': True, 'close_time': '2026-...
+# 1     {'can_close_early': True, 'close_time': '2026-...
+# 2     {'can_close_early': True, 'close_time': '2026-...
+# 3     {'can_close_early': True, 'close_time': '2026-...
+# 4     {'can_close_early': True, 'close_time': '2026-...
+# 5     {'can_close_early': True, 'close_time': '2026-...
+# 6     {'can_close_early': True, 'close_time': '2026-...
+# 7     {'can_close_early': True, 'close_time': '2026-...
+# 8     {'can_close_early': True, 'close_time': '2026-...
+# 9     {'can_close_early': True, 'close_time': '2026-...
+# 10    {'can_close_early': True, 'close_time': '2026-...
+# 11    {'can_close_early': True, 'close_time': '2026-...
+# 12    {'can_close_early': True, 'close_time': '2026-...
+# 13    {'can_close_early': True, 'close_time': '2026-...
+# 14    {'can_close_early': True, 'close_time': '2026-...
+# 15    {'can_close_early': True, 'close_time': '2026-...
+# 16    {'can_close_early': True, 'close_time': '2026-...
+# 17    {'can_close_early': True, 'close_time': '2026-...
+# 18    {'can_close_early': True, 'close_time': '2026-...
+# 19    {'can_close_early': True, 'close_time': '2026-...
+# 20    {'can_close_early': True, 'close_time': '2026-...
+# 21    {'can_close_early': True, 'close_time': '2026-...
+# 22    {'can_close_early': True, 'close_time': '2026-...
+# 23    {'can_close_early': True, 'close_time': '2026-...
+# 24    {'can_close_early': True, 'close_time': '2026-...
+# 25    {'can_close_early': True, 'close_time': '2026-...
+# 26    {'can_close_early': True, 'close_time': '2026-...
+# 27    {'can_close_early': True, 'close_time': '2026-...
+# 28    {'can_close_early': True, 'close_time': '2026-...
+# 29    {'can_close_early': True, 'close_time': '2026-...
+# 30    {'can_close_early': True, 'close_time': '2026-...
+# 31    {'can_close_early': True, 'close_time': '2026-...
+# 32    {'can_close_early': True, 'close_time': '2026-...
+# 33    {'can_close_early': True, 'close_time': '2026-...
+# 34    {'can_close_early': True, 'close_time': '2026-...
+# 35    {'can_close_early': True, 'close_time': '2026-...
+# 36    {'can_close_early': True, 'close_time': '2026-...
+# 37    {'can_close_early': True, 'close_time': '2026-...
+# 38    {'can_close_early': True, 'close_time': '2026-...
+# 39    {'can_close_early': True, 'close_time': '2026-...
+# 40    {'can_close_early': True, 'close_time': '2026-...
+# 41    {'can_close_early': True, 'close_time': '2026-...
+# 42    {'can_close_early': True, 'close_time': '2026-...
+# 43    {'can_close_early': True, 'close_time': '2026-...
+# 44    {'can_close_early': True, 'close_time': '2026-...
+# 45    {'can_close_early': True, 'close_time': '2026-...
+# Name: markets, dtype: object
+import pandas as pd
+import numpy as np
+import requests
+
+# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
+markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
+markets_response = requests.get(markets_url)
+markets_data = markets_response.json()
+
+markets_json = pd.read_json(markets_url).markets
+
+row = []
+word = []
+data = pd.DataFrame()
+for row in markets_json:
+    word.append(row.get("custom_strike", {}).get("Word"))
+    print(word)
+
+data['word'] = word
+# ['Judy Shelton']
+# ['Judy Shelton', 'Citrini']
+# ['Judy Shelton', 'Citrini', 'Kalshi']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence']
+# ['Judy Shelton', 'Citrini', 'Kalshi', 'Yield Curve', 'Volatility', 'Unchanged', 'Uncertainty', 'Trump', 'Trade War', 'Tax', 'Tariff Inflation', 'Stagflation', 'Softening', 'Soft Landing', 'Shutdown / Shut Down', 'Restrictive', 'Renovation', 'Recession', 'QT / Quantitative Tightening', 'QE / Quantitative Easing', 'Projection', 'Probability', 'President', 'Pardon', 'Pandemic', 'National Debt', 'Median', 'Layoff', 'Lawsuit', 'Goods inflation', 'Good Afternoon', 'Gold', 'Gas / Gasoline / Natural Gas', 'Expectation', 'Egg', 'Dot Plot', 'Dissent', 'Credit', 'Consumer Confidence', 'Bitcoin', 'Beige Book', 'Balance of Risk', 'Balance Sheet', 'Anchor / Anchored', 'AI / Artificial Intelligence', 'ADP']
+data
+#                             word
+0                   Judy Shelton
+1                        Citrini
+2                         Kalshi
+3                    Yield Curve
+4                     Volatility
+5                      Unchanged
+6                    Uncertainty
+7                          Trump
+8                      Trade War
+9                            Tax
+10              Tariff Inflation
+11                   Stagflation
+12                     Softening
+13                  Soft Landing
+14          Shutdown / Shut Down
+15                   Restrictive
+16                    Renovation
+17                     Recession
+18  QT / Quantitative Tightening
+19      QE / Quantitative Easing
+20                    Projection
+21                   Probability
+22                     President
+23                        Pardon
+24                      Pandemic
+25                 National Debt
+26                        Median
+27                        Layoff
+28                       Lawsuit
+29               Goods inflation
+30                Good Afternoon
+31                          Gold
+32  Gas / Gasoline / Natural Gas
+33                   Expectation
+34                           Egg
+35                      Dot Plot
+36                       Dissent
+37                        Credit
+38           Consumer Confidence
+39                       Bitcoin
+40                    Beige Book
+41               Balance of Risk
+42                 Balance Sheet
+43             Anchor / Anchored
+44  AI / Artificial Intelligence
+45                           ADP
+row = markets_json[1]
+row
+# {'can_close_early': True,
+#  'close_time': '2026-03-19T14:00:00Z',
+#  'created_time': '2026-02-24T15:22:16.990021Z',
+#  'custom_strike': {'Word': 'Citrini'},
+#  'early_close_condition': 'This market will close and expire early if the event occurs.',
+#  'event_ticker': 'KXFEDMENTION-26MAR',
+#  'expected_expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_value': '',
+#  'fractional_trading_enabled': False,
+#  'last_price': 3,
+#  'last_price_dollars': '0.0300',
+#  'latest_expiration_time': '2026-03-19T14:00:00Z',
+#  'liquidity': 0,
+#  'liquidity_dollars': '0.0000',
+#  'market_type': 'binary',
+#  'no_ask': 98,
+#  'no_ask_dollars': '0.9800',
+#  'no_bid': 97,
+#  'no_bid_dollars': '0.9700',
+#  'no_sub_title': 'Citrini',
+#  'notional_value': 100,
+#  'notional_value_dollars': '1.0000',
+#  'open_interest': 2015,
+#  'open_interest_fp': '2015.00',
+#  'open_time': '2026-02-24T16:00:00Z',
+#  'previous_price': 3,
+#  'previous_price_dollars': '0.0300',
+#  'previous_yes_ask': 3,
+#  'previous_yes_ask_dollars': '0.0300',
+#  'previous_yes_bid': 2,
+#  'previous_yes_bid_dollars': '0.0200',
+#  'price_level_structure': 'linear_cent',
+#  'price_ranges': [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}],
+#  'response_price_units': 'usd_cent',
+#  'result': '',
+#  'rules_primary': 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.',
+#  'rules_secondary': 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.',
+#  'settlement_timer_seconds': 1800,
+#  'status': 'active',
+#  'strike_type': 'custom',
+#  'subtitle': '',
+#  'tick_size': 1,
+#  'ticker': 'KXFEDMENTION-26MAR-CITR',
+#  'title': 'Will Powell say Citrini at his Mar 2026 press conference?',
+#  'updated_time': '2026-02-24T16:00:00.495221Z',
+#  'volume': 7398,
+#  'volume_24h': 312,
+#  'volume_24h_fp': '312.00',
+#  'volume_fp': '7398.00',
+#  'yes_ask': 3,
+#  'yes_ask_dollars': '0.0300',
+#  'yes_ask_size_fp': '413.00',
+#  'yes_bid': 2,
+#  'yes_bid_dollars': '0.0200',
+#  'yes_bid_size_fp': '6950.00',
+#  'yes_sub_title': 'Citrini'}
+row.get("Word")
+row.get("volume")
+# 7398
+row.get(["volume", "yes_bid"])
+# TypeError: unhashable type: 'list'
+# Cell In[67], line 1
+# ----> 1 row.get(["volume", "yes_bid"])
+row.get(("volume", "yes_bid"))
+[row.get(k) for k in ["volume", "yes_bid"]]
+# [7398, 2]
+?print
+pwd
+# '/Users/landonthomas/Documents/GitHub/kalshi-orderbook'
+print("hello, world!", file="out_test.txt")
+# AttributeError: 'str' object has no attribute 'write'
+# Cell In[72], line 1
+# ----> 1 print("hello, world!", file="out_test.txt")
+print("hello, world!", file=out_test.txt)
+# NameError: name 'out_test' is not defined
+# Cell In[73], line 1
+# ----> 1 print("hello, world!", file=out_test.txt)
+with open("out_test.txt") as f:
+    print("hello, world!")
+    
+# hello, world!
+with open("out_test.txt") as f:
+    print("hello, world!", file=f)
+    
+# UnsupportedOperation: not writable
+# Cell In[75], line 2
+#       1 with open("out_test.txt") as f:
+# ----> 2     print("hello, world!", file=f)
+with open("out_test.txt") as f:
+    print("hello, world!", file=f)
+    
+# UnsupportedOperation: not writable
+# Cell In[76], line 2
+#       1 with open("out_test.txt") as f:
+# ----> 2     print("hello, world!", file=f)
+with open("out_test.txt") as f:
+    print("hello, world!")
+    
+# hello, world!
+with open("out_test.txt") as f:
+    print("hello, world!", file=f)
+    
+# UnsupportedOperation: not writable
+# Cell In[78], line 2
+#       1 with open("out_test.txt") as f:
+# ----> 2     print("hello, world!", file=f)
+
+with open("out_test.txt", "w") as f:
+    print("hello, world!", file=f)
+    
+with open("out_test.txt", "w") as f:
+    print(row, file=f)
+    
+with open("out_test.txt", "w") as f:
+    for keys, values in markets_json:
+        print(f"{keys}: {values}", file=f)
+        
+# ValueError: too many values to unpack (expected 2)
+# Cell In[81], line 2
+#       1 with open("out_test.txt", "w") as f:
+# ----> 2     for keys, values in markets_json:
+#       3         print(f"{keys}: {values}", file=f)
+with open("out_test.txt", "w") as f:
+    for keys, values in markets_json.items:
+        print(f"{keys}: {values}", file=f)
+        
+# TypeError: 'method' object is not iterable
+# Cell In[82], line 2
+#       1 with open("out_test.txt", "w") as f:
+# ----> 2     for keys, values in markets_json.items:
+#       3         print(f"{keys}: {values}", file=f)
+with open("out_test.txt", "w") as f:
+    for keys, values in markets_json.items():
+        print(f"{keys}: {values}", file=f)
+        
+with open("out_test.txt", "w") as f:
+    for keys, values in markets_json.items():
+        print(f"{keys}: {values}\n", file=f)
+        
+markets_json.items()
+# <zip at 0x17e8e0800>
+with open("out_test.txt", "w") as f:
+    for keys, values in markets_json.items():
+        print(f"{keys}: {values}\n", file=f)
+        
+markets_json
+# 0     {'can_close_early': True, 'close_time': '2026-...
+# 1     {'can_close_early': True, 'close_time': '2026-...
+# 2     {'can_close_early': True, 'close_time': '2026-...
+# 3     {'can_close_early': True, 'close_time': '2026-...
+# 4     {'can_close_early': True, 'close_time': '2026-...
+# 5     {'can_close_early': True, 'close_time': '2026-...
+# 6     {'can_close_early': True, 'close_time': '2026-...
+# 7     {'can_close_early': True, 'close_time': '2026-...
+# 8     {'can_close_early': True, 'close_time': '2026-...
+# 9     {'can_close_early': True, 'close_time': '2026-...
+# 10    {'can_close_early': True, 'close_time': '2026-...
+# 11    {'can_close_early': True, 'close_time': '2026-...
+# 12    {'can_close_early': True, 'close_time': '2026-...
+# 13    {'can_close_early': True, 'close_time': '2026-...
+# 14    {'can_close_early': True, 'close_time': '2026-...
+# 15    {'can_close_early': True, 'close_time': '2026-...
+# 16    {'can_close_early': True, 'close_time': '2026-...
+# 17    {'can_close_early': True, 'close_time': '2026-...
+# 18    {'can_close_early': True, 'close_time': '2026-...
+# 19    {'can_close_early': True, 'close_time': '2026-...
+# 20    {'can_close_early': True, 'close_time': '2026-...
+# 21    {'can_close_early': True, 'close_time': '2026-...
+# 22    {'can_close_early': True, 'close_time': '2026-...
+# 23    {'can_close_early': True, 'close_time': '2026-...
+# 24    {'can_close_early': True, 'close_time': '2026-...
+# 25    {'can_close_early': True, 'close_time': '2026-...
+# 26    {'can_close_early': True, 'close_time': '2026-...
+# 27    {'can_close_early': True, 'close_time': '2026-...
+# 28    {'can_close_early': True, 'close_time': '2026-...
+# 29    {'can_close_early': True, 'close_time': '2026-...
+# 30    {'can_close_early': True, 'close_time': '2026-...
+# 31    {'can_close_early': True, 'close_time': '2026-...
+# 32    {'can_close_early': True, 'close_time': '2026-...
+# 33    {'can_close_early': True, 'close_time': '2026-...
+# 34    {'can_close_early': True, 'close_time': '2026-...
+# 35    {'can_close_early': True, 'close_time': '2026-...
+# 36    {'can_close_early': True, 'close_time': '2026-...
+# 37    {'can_close_early': True, 'close_time': '2026-...
+# 38    {'can_close_early': True, 'close_time': '2026-...
+# 39    {'can_close_early': True, 'close_time': '2026-...
+# 40    {'can_close_early': True, 'close_time': '2026-...
+# 41    {'can_close_early': True, 'close_time': '2026-...
+# 42    {'can_close_early': True, 'close_time': '2026-...
+# 43    {'can_close_early': True, 'close_time': '2026-...
+# 44    {'can_close_early': True, 'close_time': '2026-...
+# 45    {'can_close_early': True, 'close_time': '2026-...
+# Name: markets, dtype: object
+with open("out_test.txt", "w") as f:
+    for row in markets_json:
+        for keys, values in markets_json.items():
+            print(f"{keys}: {values}\n", file=f)
+            
+markets_json.iloc[1]
+# {'can_close_early': True,
+#  'close_time': '2026-03-19T14:00:00Z',
+#  'created_time': '2026-02-24T15:22:16.990021Z',
+#  'custom_strike': {'Word': 'Citrini'},
+#  'early_close_condition': 'This market will close and expire early if the event occurs.',
+#  'event_ticker': 'KXFEDMENTION-26MAR',
+#  'expected_expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_value': '',
+#  'fractional_trading_enabled': False,
+#  'last_price': 3,
+#  'last_price_dollars': '0.0300',
+#  'latest_expiration_time': '2026-03-19T14:00:00Z',
+#  'liquidity': 0,
+#  'liquidity_dollars': '0.0000',
+#  'market_type': 'binary',
+#  'no_ask': 98,
+#  'no_ask_dollars': '0.9800',
+#  'no_bid': 97,
+#  'no_bid_dollars': '0.9700',
+#  'no_sub_title': 'Citrini',
+#  'notional_value': 100,
+#  'notional_value_dollars': '1.0000',
+#  'open_interest': 2015,
+#  'open_interest_fp': '2015.00',
+#  'open_time': '2026-02-24T16:00:00Z',
+#  'previous_price': 3,
+#  'previous_price_dollars': '0.0300',
+#  'previous_yes_ask': 3,
+#  'previous_yes_ask_dollars': '0.0300',
+#  'previous_yes_bid': 2,
+#  'previous_yes_bid_dollars': '0.0200',
+#  'price_level_structure': 'linear_cent',
+#  'price_ranges': [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}],
+#  'response_price_units': 'usd_cent',
+#  'result': '',
+#  'rules_primary': 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.',
+#  'rules_secondary': 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.',
+#  'settlement_timer_seconds': 1800,
+#  'status': 'active',
+#  'strike_type': 'custom',
+#  'subtitle': '',
+#  'tick_size': 1,
+#  'ticker': 'KXFEDMENTION-26MAR-CITR',
+#  'title': 'Will Powell say Citrini at his Mar 2026 press conference?',
+#  'updated_time': '2026-02-24T16:00:00.495221Z',
+#  'volume': 7398,
+#  'volume_24h': 312,
+#  'volume_24h_fp': '312.00',
+#  'volume_fp': '7398.00',
+#  'yes_ask': 3,
+#  'yes_ask_dollars': '0.0300',
+#  'yes_ask_size_fp': '413.00',
+#  'yes_bid': 2,
+#  'yes_bid_dollars': '0.0200',
+#  'yes_bid_size_fp': '6950.00',
+#  'yes_sub_title': 'Citrini'}
+markets_json.length()
+# AttributeError: 'Series' object has no attribute 'length'
+# /var/folders/mk/2xpgwjhx1170zkyyl35jznfm0000gn/T/ipykernel_5464/3432460309.py in ?()
+# ----> 1 markets_json.length()
+# 
+# ~/anaconda3/lib/python3.11/site-packages/pandas/core/generic.py in ?(self, name)
+#    5985             and name not in self._accessors
+#    5986             and self._info_axis._can_hold_identifiers_and_holds_name(name)
+#    5987         ):
+#    5988             return self[name]
+# -> 5989         return object.__getattribute__(self, name)
+# 
+markets_json.size()
+# TypeError: 'int' object is not callable
+# Cell In[91], line 1
+# ----> 1 markets_json.size()
+len(markets_json)
+# 46
+with open("out_test.txt", "w") as f:
+    for row in len(markets_json):
+        for keys, values in markets_json.iloc[row].items():
+            print(f"{keys}: {values}\n", file=f)
+            
+# TypeError: 'int' object is not iterable
+# Cell In[93], line 2
+#       1 with open("out_test.txt", "w") as f:
+# ----> 2     for row in len(markets_json):
+#       3         for keys, values in markets_json.iloc[row].items():
+#       4             print(f"{keys}: {values}\n", file=f)
+markets_json.iloc[1]
+# {'can_close_early': True,
+#  'close_time': '2026-03-19T14:00:00Z',
+#  'created_time': '2026-02-24T15:22:16.990021Z',
+#  'custom_strike': {'Word': 'Citrini'},
+#  'early_close_condition': 'This market will close and expire early if the event occurs.',
+#  'event_ticker': 'KXFEDMENTION-26MAR',
+#  'expected_expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_time': '2026-03-19T14:00:00Z',
+#  'expiration_value': '',
+#  'fractional_trading_enabled': False,
+#  'last_price': 3,
+#  'last_price_dollars': '0.0300',
+#  'latest_expiration_time': '2026-03-19T14:00:00Z',
+#  'liquidity': 0,
+#  'liquidity_dollars': '0.0000',
+#  'market_type': 'binary',
+#  'no_ask': 98,
+#  'no_ask_dollars': '0.9800',
+#  'no_bid': 97,
+#  'no_bid_dollars': '0.9700',
+#  'no_sub_title': 'Citrini',
+#  'notional_value': 100,
+#  'notional_value_dollars': '1.0000',
+#  'open_interest': 2015,
+#  'open_interest_fp': '2015.00',
+#  'open_time': '2026-02-24T16:00:00Z',
+#  'previous_price': 3,
+#  'previous_price_dollars': '0.0300',
+#  'previous_yes_ask': 3,
+#  'previous_yes_ask_dollars': '0.0300',
+#  'previous_yes_bid': 2,
+#  'previous_yes_bid_dollars': '0.0200',
+#  'price_level_structure': 'linear_cent',
+#  'price_ranges': [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}],
+#  'response_price_units': 'usd_cent',
+#  'result': '',
+#  'rules_primary': 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.',
+#  'rules_secondary': 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.',
+#  'settlement_timer_seconds': 1800,
+#  'status': 'active',
+#  'strike_type': 'custom',
+#  'subtitle': '',
+#  'tick_size': 1,
+#  'ticker': 'KXFEDMENTION-26MAR-CITR',
+#  'title': 'Will Powell say Citrini at his Mar 2026 press conference?',
+#  'updated_time': '2026-02-24T16:00:00.495221Z',
+#  'volume': 7398,
+#  'volume_24h': 312,
+#  'volume_24h_fp': '312.00',
+#  'volume_fp': '7398.00',
+#  'yes_ask': 3,
+#  'yes_ask_dollars': '0.0300',
+#  'yes_ask_size_fp': '413.00',
+#  'yes_bid': 2,
+#  'yes_bid_dollars': '0.0200',
+#  'yes_bid_size_fp': '6950.00',
+#  'yes_sub_title': 'Citrini'}
+markets_json.iloc[1].items()
+# dict_items([('can_close_early', True), ('close_time', '2026-03-19T14:00:00Z'), ('created_time', '2026-02-24T15:22:16.990021Z'), ('custom_strike', {'Word': 'Citrini'}), ('early_close_condition', 'This market will close and expire early if the event occurs.'), ('event_ticker', 'KXFEDMENTION-26MAR'), ('expected_expiration_time', '2026-03-19T14:00:00Z'), ('expiration_time', '2026-03-19T14:00:00Z'), ('expiration_value', ''), ('fractional_trading_enabled', False), ('last_price', 3), ('last_price_dollars', '0.0300'), ('latest_expiration_time', '2026-03-19T14:00:00Z'), ('liquidity', 0), ('liquidity_dollars', '0.0000'), ('market_type', 'binary'), ('no_ask', 98), ('no_ask_dollars', '0.9800'), ('no_bid', 97), ('no_bid_dollars', '0.9700'), ('no_sub_title', 'Citrini'), ('notional_value', 100), ('notional_value_dollars', '1.0000'), ('open_interest', 2015), ('open_interest_fp', '2015.00'), ('open_time', '2026-02-24T16:00:00Z'), ('previous_price', 3), ('previous_price_dollars', '0.0300'), ('previous_yes_ask', 3), ('previous_yes_ask_dollars', '0.0300'), ('previous_yes_bid', 2), ('previous_yes_bid_dollars', '0.0200'), ('price_level_structure', 'linear_cent'), ('price_ranges', [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}]), ('response_price_units', 'usd_cent'), ('result', ''), ('rules_primary', 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.'), ('rules_secondary', 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.'), ('settlement_timer_seconds', 1800), ('status', 'active'), ('strike_type', 'custom'), ('subtitle', ''), ('tick_size', 1), ('ticker', 'KXFEDMENTION-26MAR-CITR'), ('title', 'Will Powell say Citrini at his Mar 2026 press conference?'), ('updated_time', '2026-02-24T16:00:00.495221Z'), ('volume', 7398), ('volume_24h', 312), ('volume_24h_fp', '312.00'), ('volume_fp', '7398.00'), ('yes_ask', 3), ('yes_ask_dollars', '0.0300'), ('yes_ask_size_fp', '413.00'), ('yes_bid', 2), ('yes_bid_dollars', '0.0200'), ('yes_bid_size_fp', '6950.00'), ('yes_sub_title', 'Citrini')])
+[print(k) for k in markets_json.iloc[1].items()]
+# ('can_close_early', True)
+# ('close_time', '2026-03-19T14:00:00Z')
+# ('created_time', '2026-02-24T15:22:16.990021Z')
+# ('custom_strike', {'Word': 'Citrini'})
+# ('early_close_condition', 'This market will close and expire early if the event occurs.')
+# ('event_ticker', 'KXFEDMENTION-26MAR')
+# ('expected_expiration_time', '2026-03-19T14:00:00Z')
+# ('expiration_time', '2026-03-19T14:00:00Z')
+# ('expiration_value', '')
+# ('fractional_trading_enabled', False)
+# ('last_price', 3)
+# ('last_price_dollars', '0.0300')
+# ('latest_expiration_time', '2026-03-19T14:00:00Z')
+# ('liquidity', 0)
+# ('liquidity_dollars', '0.0000')
+# ('market_type', 'binary')
+# ('no_ask', 98)
+# ('no_ask_dollars', '0.9800')
+# ('no_bid', 97)
+# ('no_bid_dollars', '0.9700')
+# ('no_sub_title', 'Citrini')
+# ('notional_value', 100)
+# ('notional_value_dollars', '1.0000')
+# ('open_interest', 2015)
+# ('open_interest_fp', '2015.00')
+# ('open_time', '2026-02-24T16:00:00Z')
+# ('previous_price', 3)
+# ('previous_price_dollars', '0.0300')
+# ('previous_yes_ask', 3)
+# ('previous_yes_ask_dollars', '0.0300')
+# ('previous_yes_bid', 2)
+# ('previous_yes_bid_dollars', '0.0200')
+# ('price_level_structure', 'linear_cent')
+# ('price_ranges', [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}])
+# ('response_price_units', 'usd_cent')
+# ('result', '')
+# ('rules_primary', 'If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.')
+# ('rules_secondary', 'Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.')
+# ('settlement_timer_seconds', 1800)
+# ('status', 'active')
+# ('strike_type', 'custom')
+# ('subtitle', '')
+# ('tick_size', 1)
+# ('ticker', 'KXFEDMENTION-26MAR-CITR')
+# ('title', 'Will Powell say Citrini at his Mar 2026 press conference?')
+# ('updated_time', '2026-02-24T16:00:00.495221Z')
+# ('volume', 7398)
+# ('volume_24h', 312)
+# ('volume_24h_fp', '312.00')
+# ('volume_fp', '7398.00')
+# ('yes_ask', 3)
+# ('yes_ask_dollars', '0.0300')
+# ('yes_ask_size_fp', '413.00')
+# ('yes_bid', 2)
+# ('yes_bid_dollars', '0.0200')
+# ('yes_bid_size_fp', '6950.00')
+# ('yes_sub_title', 'Citrini')
+# [None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None]
+[print(f"{key}: {value}") for key, value in markets_json.iloc[1].items()]
+# can_close_early: True
+# close_time: 2026-03-19T14:00:00Z
+# created_time: 2026-02-24T15:22:16.990021Z
+# custom_strike: {'Word': 'Citrini'}
+# early_close_condition: This market will close and expire early if the event occurs.
+# event_ticker: KXFEDMENTION-26MAR
+# expected_expiration_time: 2026-03-19T14:00:00Z
+# expiration_time: 2026-03-19T14:00:00Z
+# expiration_value: 
+# fractional_trading_enabled: False
+# last_price: 3
+# last_price_dollars: 0.0300
+# latest_expiration_time: 2026-03-19T14:00:00Z
+# liquidity: 0
+# liquidity_dollars: 0.0000
+# market_type: binary
+# no_ask: 98
+# no_ask_dollars: 0.9800
+# no_bid: 97
+# no_bid_dollars: 0.9700
+# no_sub_title: Citrini
+# notional_value: 100
+# notional_value_dollars: 1.0000
+# open_interest: 2015
+# open_interest_fp: 2015.00
+# open_time: 2026-02-24T16:00:00Z
+# previous_price: 3
+# previous_price_dollars: 0.0300
+# previous_yes_ask: 3
+# previous_yes_ask_dollars: 0.0300
+# previous_yes_bid: 2
+# previous_yes_bid_dollars: 0.0200
+# price_level_structure: linear_cent
+# price_ranges: [{'end': '1.0000', 'start': '0.0000', 'step': '0.0100'}]
+# response_price_units: usd_cent
+# result: 
+# rules_primary: If the Chair of the Federal Reserve says Citrini at his Mar 2026 post-FOMC meeting introductory remarks and Q+A, then the market resolves to Yes.
+# rules_secondary: Video of the Mar 2026 will be primarily used to resolve the market; if a consensus by Kalshi employees cannot be reached using video, transcripts of the Mar 2026 will be used according to the news publications listed in the contract. The exact phrase/word, or a plural or possessive form of the phrase/word, must be used. Grammatical/tense inflections are otherwise not included. Please see full rules for more details. If the event does not occur before Mar 19, 2026, then a strike for the event not occurring will resolve to Yes and all other strikes will resolve to No.
+# settlement_timer_seconds: 1800
+# status: active
+# strike_type: custom
+# subtitle: 
+# tick_size: 1
+# ticker: KXFEDMENTION-26MAR-CITR
+# title: Will Powell say Citrini at his Mar 2026 press conference?
+# updated_time: 2026-02-24T16:00:00.495221Z
+# volume: 7398
+# volume_24h: 312
+# volume_24h_fp: 312.00
+# volume_fp: 7398.00
+# yes_ask: 3
+# yes_ask_dollars: 0.0300
+# yes_ask_size_fp: 413.00
+# yes_bid: 2
+# yes_bid_dollars: 0.0200
+# yes_bid_size_fp: 6950.00
+# yes_sub_title: Citrini
+# [None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None,
+#  None]
