@@ -14,6 +14,7 @@ word = []
 data = pd.DataFrame()
 for row in markets_json:
     word.append(row.get("custom_strike", {}).get("Word"))
+    word.append(row.get("created_time"))
     print(word)
 
 data['word'] = word
