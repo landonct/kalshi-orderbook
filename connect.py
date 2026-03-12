@@ -9,15 +9,16 @@ markets_data = markets_response.json()
 
 markets_json = pd.read_json(markets_url).markets
 
-row = []
-word = []
+# I want to add the important things to the dictionary then concat them all into a datafram row by row
+# This way I'll have a dataframe where each row is a different market
+word = dict()
 data = pd.DataFrame()
 for row in markets_json:
     word.append(row.get("custom_strike", {}).get("Word"))
     word.append(row.get("created_time"))
     print(word)
+    data = pd.concat([data, word])
 
-data['word'] = word
 
 with open("out_test.txt", "w") as f:
     for row in range(len(markets_json)):
