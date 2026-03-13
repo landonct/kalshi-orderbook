@@ -1,3 +1,4 @@
+# TODO: Chart the series and simulate the orderbook
 import pandas as pd
 import numpy as np
 import requests
@@ -8,9 +9,6 @@ markets_response = requests.get(markets_url)
 markets_data = markets_response.json()
 
 markets_json = pd.read_json(markets_url).markets
-
-# I want to add the important things to the dictionary then concat them all into a datafram row by row
-# This way I'll have a dataframe where each row is a different market
 
 data = pd.DataFrame()
 for row in markets_json:
