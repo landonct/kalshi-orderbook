@@ -25,10 +25,35 @@ for row in markets_json:
     )
     data = pd.concat([data, temp])
 
-data = data.drop(columns="close_time")  # Drop bad columns
+data = data.drop(
+    columns=[
+        "close_time",
+        "can_close_early",
+        "early_close_condition",
+        "event_ticker",
+        "expected_expiration_time",
+        "expiration_time",
+        "expiration_value",
+        "fractional_trading_enabled",
+        "latest_expiration_time",
+        "market_type",
+        "open_interest_fp",
+        "open_time",
+        "price_level_structure",
+        "price_ranges",
+        "response_price_units",
+        "rules_primary",
+        "rules_secondary",
+        "settlement_timer_seconds",
+        "strike_type",
+        "ticker",
+        "title",
+        "yes_sub_title",
+    ]
+)  # Drop bad columns
 
-with open("out_test.txt", "w") as f:
-    for row in range(len(markets_json)):
-        for keys, values in markets_json.iloc[row].items():
-            print(f"{keys}: {values}", file=f)
-        print("\n ================================= \n", file=f)
+# with open("out_test.txt", "w") as f:
+#     for row in range(len(markets_json)):
+#         for keys, values in markets_json.iloc[row].items():
+#             print(f"{keys}: {values}", file=f)
+#         print("\n ================================= \n", file=f)
