@@ -1,57 +1,86 @@
 # TODO: Chart the series and simulate the orderbook
 import pandas as pd
-import numpy as np
+import time
+# import numpy as np
 import requests
+import seaborn as sns
 
-# https://kalshi.com/markets/kxfedmention/fed-mention/kxfedmention-26mar
-markets_url = f"https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDMENTION&status=open"  # noqa: F541
-markets_response = requests.get(markets_url)
-markets_data = markets_response.json()
+BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
+TICKER = "KXFEDMENTION"
 
-markets_json = pd.read_json(markets_url).markets
+def get_market(series_ticker: str) -> list[dict]:
+    """Queries the Kalshi markets API to get all the current market data
+    Returns a JSON"""
+    url = f"{BASEURL}/markets"
+    params = {"series_ticker": TICKER, "status": "open", "limit": 100}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()["markets"]
 
-data = pd.DataFrame()
-for row in markets_json:
-    temp = pd.DataFrame(
-        [
-            {
-                **row,
-                "custom_strike": row["custom_strike"]["Word"],
-                "price_ranges": str(row["price_ranges"]),
-            }
-        ]
+def get_trades(ticker: str) -> pd.DataFrame:
+    url = f"{BASEURL}/markets/trades"
+    all_trades = []
+    cursor = None
+    while True:
+        params = {"ticker": ticker, "limit": 1000}
+        if cursor:
+            params["cursor"] = cursor
+        
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        trades = data.get("trades", [])
+        if not trades:
+            print("No trades")
+            break
+
+        all_trades.extend(trades)
+        cursor = data.get("cursor")
+        if not cursor:
+            break
+
+        time.sleep(.1)
+
+    if not all_trades:
+        return pd.DataFrame()
+        
+    df = pd.DataFrame(all_trades)
+    df["created_time"] = pd.to_datetime(df["created_time"])
+    df = df.sort_values("created_time").reset_index(drop = True)
+    mask = df.columns.str.contains(r"dollars|fp")
+    df[df.columns[mask]] = df.loc[:, mask].apply(pd.to_numeric)
+    return df
+
+
+markets = get_market(TICKER)
+print(f"Found {len(markets)} in {TICKER}")
+
+all_market_trades = {}
+for market in markets:
+    ticker = market["ticker"]
+    print(f"Getting trades for {ticker}")
+    market_trade = get_trades(ticker)
+    print(f"    Found {len(market_trade)} trades")
+    all_market_trades[ticker] = market_trade
+
+full_frame = pd.DataFrame()
+for key, value in all_market_trades.items():
+    full_frame = pd.concat([full_frame, value])
+
+word = full_frame["ticker"].str.extract(r"(?<=-)(\w+)$").squeeze()
+full_frame.insert(0, "word", word)
+
+full_frame["word"].sort_values().unique()
+
+full_frame_filtered = full_frame[full_frame["word"] == "CRED"].copy()
+mask = full_frame_filtered.columns.str.contains(r"dollars|fp")
+full_frame_filtered[full_frame_filtered.columns[mask]] = full_frame_filtered.loc[:, mask].apply(pd.to_numeric)
+sns.lineplot(
+    data=full_frame_filtered,
+    x="created_time", y="yes_price_dollars"
     )
-    data = pd.concat([data, temp])
 
-data = data.drop(
-    columns=[
-        "close_time",
-        "can_close_early",
-        "early_close_condition",
-        "event_ticker",
-        "expected_expiration_time",
-        "expiration_time",
-        "expiration_value",
-        "fractional_trading_enabled",
-        "latest_expiration_time",
-        "market_type",
-        "open_interest_fp",
-        "open_time",
-        "price_level_structure",
-        "price_ranges",
-        "response_price_units",
-        "rules_primary",
-        "rules_secondary",
-        "settlement_timer_seconds",
-        "strike_type",
-        "ticker",
-        "title",
-        "yes_sub_title",
-    ]
-)  # Drop bad columns
-
-# with open("out_test.txt", "w") as f:
-#     for row in range(len(markets_json)):
-#         for keys, values in markets_json.iloc[row].items():
-#             print(f"{keys}: {values}", file=f)
-#         print("\n ================================= \n", file=f)
+df_volume = full_frame[(full_frame["yes_price_dollars"] < .8) & (full_frame["yes_price_dollars"] > .2)].groupby("word").agg(volume=("count_fp", "sum")).sort_values(by="volume", ascending=False).reset_index()
+top_3_volume = df_volume["word"].head(3).to_list()
+filtered_top_3_volume = full_frame[full_frame["word"].isin(top_3_volume)]
