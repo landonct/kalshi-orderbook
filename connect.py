@@ -103,9 +103,11 @@ df_volume = (
 top_3_volume = df_volume["word"].head(3).to_list()
 filtered_top_3_volume = full_frame[full_frame["word"].isin(top_3_volume)]
 
+fig, ax = plt.subplots()
 sns.lineplot(
     data=filtered_top_3_volume, x="created_time", y="yes_price_dollars", hue="word"
 )
+plt.show()
 
 filtered_top_3_volume.set_index("created_time").resample("5min").last().ffill()
 
@@ -116,18 +118,18 @@ data_agg = (
 )
 
 data_plot = full_frame[
-        (full_frame["ticker"].str.contains(rf"{TICKER}-26JAN"))
-        & (full_frame["created_time"] >= pd.Timestamp("2026-01-28 19:29:00", tz="UTC"))
-    ][["created_time", "word", "yes_price_dollars"]].set_index("created_time").groupby("word").resample(".01s").mean().reset_index().ffill()
+        (full_frame["ticker"].str.contains(rf"{TICKER}-26MAR"))
+        & (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
+    ][["created_time", "word", "yes_price_dollars"]].set_index("created_time").groupby("word").resample("1s").mean().reset_index().ffill()
 
 data_plot_filtered = data_plot[data_plot["word"].isin(["PAND", "TRAD", "PROJ"])]
 data_plot["diff"] = data_plot.groupby("word")["yes_price_dollars"].diff().dropna()
 data_plot["max_diff"] = data_plot.groupby("word")["diff"].transform("max")
-data_plot_filtered = data_plot[data_plot["max_diff"].abs() > .6]
+data_plot_filtered = data_plot[data_plot["max_diff"].abs() > .2]
 
 fig, ax = plt.subplots()
 sns.lineplot(
-    data=data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
+    data=data_plot_filtered.groupby("word").filter(lambda group: (group["yes_price_dollars"] < .99).all()), # data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
     x="created_time",
     y="yes_price_dollars",
     hue="word",
@@ -135,3 +137,5 @@ sns.lineplot(
     ax=ax
 )
 plt.show()
+
+full_frame.to_csv("full_frame.csv")
