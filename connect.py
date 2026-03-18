@@ -1,7 +1,7 @@
 # TODO: Chart the series and simulate the orderbook
 import pandas as pd
 import time
-
+import matplotlib.pyplot as plt
 # import numpy as np
 import requests
 import seaborn as sns
@@ -11,7 +11,10 @@ TICKER = "KXFEDMENTION"
 
 
 def summary_stat(df: pd.DataFrame) -> pd.DataFrame:
-    df.agg()
+    pass
+
+def ofi(df: pd.DataFrame) -> int:
+    pass
 
 
 def get_market(series_ticker: str) -> list[dict]:
@@ -109,21 +112,26 @@ filtered_top_3_volume.set_index("created_time").resample("5min").last().ffill()
 data_agg = (
     full_frame.groupby(["ticker", "word"])
     .agg(count=("trade_id", "count"))
-    .sort_values("count")
+    .sort_values("count", ascending=False)
 )
 
-sns.lineplot(
-    data=full_frame[
+data_plot = full_frame[
         (full_frame["ticker"].str.contains(rf"{TICKER}-26JAN"))
         & (full_frame["created_time"] >= pd.Timestamp("2026-01-28 19:29:00", tz="UTC"))
-    ]
-    .set_index("created_time")
-    .groupby("word")
-    .resample("5s")
-    .mean("yes_price_dollars")
-    .reset_index(),
+    ][["created_time", "word", "yes_price_dollars"]].set_index("created_time").groupby("word").resample(".01s").mean().reset_index().ffill()
+
+data_plot_filtered = data_plot[data_plot["word"].isin(["PAND", "TRAD", "PROJ"])]
+data_plot["diff"] = data_plot.groupby("word")["yes_price_dollars"].diff().dropna()
+data_plot["max_diff"] = data_plot.groupby("word")["diff"].transform("max")
+data_plot_filtered = data_plot[data_plot["max_diff"].abs() > .6]
+
+fig, ax = plt.subplots()
+sns.lineplot(
+    data=data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
     x="created_time",
     y="yes_price_dollars",
     hue="word",
-    legend=False,
+    legend=True,
+    ax=ax
 )
+plt.show()
