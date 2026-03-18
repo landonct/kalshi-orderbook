@@ -18,7 +18,7 @@ def get_market(series_ticker: str) -> list[dict]:
     """Queries the Kalshi markets API to get all the current market data
     Returns a JSON"""
     url = f"{BASEURL}/markets"
-    params = {"series_ticker": TICKER, "status": "open", "limit": 100}
+    params = {"series_ticker": TICKER, "limit": 100}
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()["markets"]
@@ -105,3 +105,25 @@ sns.lineplot(
 )
 
 filtered_top_3_volume.set_index("created_time").resample("5min").last().ffill()
+
+data_agg = (
+    full_frame.groupby(["ticker", "word"])
+    .agg(count=("trade_id", "count"))
+    .sort_values("count")
+)
+
+sns.lineplot(
+    data=full_frame[
+        (full_frame["ticker"].str.contains(rf"{TICKER}-26JAN"))
+        & (full_frame["created_time"] >= pd.Timestamp("2026-01-28 19:29:00", tz="UTC"))
+    ]
+    .set_index("created_time")
+    .groupby("word")
+    .resample("5s")
+    .mean("yes_price_dollars")
+    .reset_index(),
+    x="created_time",
+    y="yes_price_dollars",
+    hue="word",
+    legend=False,
+)
