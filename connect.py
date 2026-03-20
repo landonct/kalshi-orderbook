@@ -2,7 +2,7 @@
 import pandas as pd
 import time
 import matplotlib.pyplot as plt
-# import numpy as np
+import numpy as np
 import requests
 import seaborn as sns
 
@@ -13,8 +13,21 @@ TICKER = "KXFEDMENTION"
 def summary_stat(df: pd.DataFrame) -> pd.DataFrame:
     pass
 
-def ofi(df: pd.DataFrame) -> int:
-    pass
+
+def ofi(df: pd.DataFrame, period: str) -> pd.DataFrame:
+    if "word" not in df.columns:
+        raise ValueError(f"Column 'word' not found in {df.columns}")
+
+    grouped_df = (
+        df.set_index("created_time").groupby(["word", "taker_side"]).resample(period)
+    )
+    agg_df = (
+        grouped_df.agg(volume=("count_fp", "sum"))
+        .groupby(["created_time", "word"])
+        .agg(ofi=("volume", "diff"))
+    )
+
+    return agg_df
 
 
 def get_market(series_ticker: str) -> list[dict]:
@@ -117,24 +130,34 @@ data_agg = (
     .sort_values("count", ascending=False)
 )
 
-data_plot = full_frame[
+data_plot = (
+    full_frame[
         (full_frame["ticker"].str.contains(rf"{TICKER}-26MAR"))
         & (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
-    ][["created_time", "word", "yes_price_dollars"]].set_index("created_time").groupby("word").resample("1s").mean().reset_index().ffill()
+    ][["created_time", "word", "yes_price_dollars"]]
+    .set_index("created_time")
+    .groupby("word")
+    .resample("1s")
+    .mean()
+    .reset_index()
+    .ffill()
+)
 
 data_plot_filtered = data_plot[data_plot["word"].isin(["PAND", "TRAD", "PROJ"])]
 data_plot["diff"] = data_plot.groupby("word")["yes_price_dollars"].diff().dropna()
 data_plot["max_diff"] = data_plot.groupby("word")["diff"].transform("max")
-data_plot_filtered = data_plot[data_plot["max_diff"].abs() > .2]
+data_plot_filtered = data_plot[data_plot["max_diff"].abs() > 0.2]
 
 fig, ax = plt.subplots()
 sns.lineplot(
-    data=data_plot_filtered.groupby("word").filter(lambda group: (group["yes_price_dollars"] < .99).all()), # data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
+    data=data_plot_filtered.groupby("word").filter(
+        lambda group: (group["yes_price_dollars"] < 0.99).all()
+    ),  # data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
     x="created_time",
     y="yes_price_dollars",
     hue="word",
     legend=True,
-    ax=ax
+    ax=ax,
 )
 plt.show()
 
