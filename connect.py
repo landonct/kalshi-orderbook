@@ -21,10 +21,16 @@ def ofi(df: pd.DataFrame, period: str) -> pd.DataFrame:
     grouped_df = (
         df.set_index("created_time").groupby(["word", "taker_side"]).resample(period)
     )
-    agg_df = (
-        grouped_df.agg(volume=("count_fp", "sum"))
-        .groupby(["created_time", "word"])
-        .agg(ofi=("volume", "diff"))
+    unsigned_agg = grouped_df.agg(volume=("count_fp", "sum")).reset_index()
+
+    unsigned_agg["signed_volume"] = np.where(
+        unsigned_agg["taker_side"] == "yes",
+        unsigned_agg["volume"],
+        -unsigned_agg["volume"],
+    )
+
+    agg_df = unsigned_agg.groupby(["created_time", "word"]).agg(
+        ofi=("signed_volume", "sum")
     )
 
     return agg_df
@@ -162,3 +168,16 @@ sns.lineplot(
 plt.show()
 
 full_frame.to_csv("full_frame.csv")
+
+full_frame_event = full_frame[
+    (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
+    & (full_frame["created_time"] <= pd.Timestamp("2026-03-18 19:29:00", tz="UTC"))
+]
+ofi_data = ofi(full_frame_event, "1s")
+
+ofi_plot = ofi_data.reset_index().set_index("created_time").resample("1s")
+
+fig, ax = plt.subplots()
+sns.lineplot(data=ofi_data, x="created_time", y="ofi", hue="word", legend=False, ax=ax)
+ax.set_ylim(bottom=-2000, top=2000)
+plt.show()
