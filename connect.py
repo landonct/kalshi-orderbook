@@ -181,3 +181,19 @@ fig, ax = plt.subplots()
 sns.lineplot(data=ofi_data, x="created_time", y="ofi", hue="word", legend=False, ax=ax)
 ax.set_ylim(bottom=-2000, top=2000)
 plt.show()
+
+event_frame = (
+    full_frame_event[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
+    .set_index("created_time")
+    .groupby("word")
+    .resample("1s")
+    .agg(no_price=("no_price_dollars", "last"), yes_price=("yes_price_dollars", "last"))
+    .ffill()
+    .reset_index("created_time")
+)
+
+data_joined = event_frame.merge(
+    ofi_data.reset_index("created_time"), on=["word", "created_time"]
+)
+
+data_joined["price_lead"] = data_joined.lea
