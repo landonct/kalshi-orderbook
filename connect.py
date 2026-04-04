@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import requests
 import seaborn as sns
+import statsmodels.formula.api as smf
+from statsmodels.graphics.tsaplots import plot_acf
+import math
 
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
@@ -196,4 +199,35 @@ data_joined = event_frame.merge(
     ofi_data.reset_index("created_time"), on=["word", "created_time"]
 )
 
-data_joined["price_lead"] = data_joined.lea
+data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
+data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
+
+nw_lags = math.floor(4 * (3450 / 100) ** (2 / 9))
+
+results = data_joined.groupby("word").apply(
+    lambda group: smf.ols("price_diff ~ ofi", data=group).fit(
+        cov_type="HAC", cov_kwds={"maxlags": nw_lags}
+    )
+)
+
+for word, result in results.items():
+    print(f"======================= Results for {word} =======================\n\n")
+    print(result.summary())
+
+summary = pd.DataFrame(
+    {
+        word: {
+            "beta": result.params["ofi"],
+            "pvalue": result.pvalues["ofi"],
+            "sig": result.params["ofi"]
+            / np.where(result.bse["ofi"] != 0, result.bse["ofi"], 100)
+            > 2.58,
+            "r2": result.rsquared,
+        }
+        for word, result in results.items()
+    }
+).T
+
+summary
+
+plot_acf(results["OIL"].resid, lags=30)
