@@ -187,7 +187,7 @@ event_frame = (
     full_frame_event[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
     .set_index("created_time")
     .groupby("word")
-    .resample("10s")
+    .resample("1s")
     .agg(no_price=("no_price_dollars", "last"), yes_price=("yes_price_dollars", "last"))
     .ffill()
     .reset_index("created_time")
@@ -199,13 +199,31 @@ data_joined = event_frame.merge(
 
 data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
 data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
-data_joined["ofi_thres"] = data_joined.groupby("word").apply(
+data_joined["ofi_thresh"] = data_joined.groupby("word").apply(
     lambda group: 3 * np.sqrt(group["ofi"].var())
 )
+data_joined = data_joined.reset_index()
 
-nw_lags = np.floor(4 * (3450 / 100) ** (2 / 9))
+data_window = pd.DataFrame()
+for word in data_joined.reset_index()["word"].unique():
+    count = 1
+    data_join_word = data_joined[data_joined["word"] == word]
+    spike_times = data_join_word[
+        data_join_word["ofi"].abs() > data_join_word["ofi_thresh"]
+    ]["created_time"].reset_index(drop=True)
+    for spike in spike_times:
+        data_spike = data_join_word.set_index("created_time").loc[
+            spike - pd.Timedelta("20s") : spike + pd.Timedelta("5s")
+        ]
+        data_spike["window_num"] = count
+        count += 1
+        data_window = pd.concat([data_window, data_spike])
 
-results = data_joined.groupby("word").apply(
+data_model = data_window.reset_index()
+
+nw_lags = int(np.floor(4 * (30 / 100) ** (2 / 9)))
+
+results = data_model.groupby(["word", "window_num"]).apply(
     lambda group: smf.ols("price_diff ~ ofi", data=group).fit(
         cov_type="HAC", cov_kwds={"maxlags": nw_lags}
     )
@@ -229,4 +247,4 @@ summary = pd.DataFrame(
     }
 ).T
 
-summary
+summary[summary["sig"]]
