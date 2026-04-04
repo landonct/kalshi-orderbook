@@ -189,7 +189,7 @@ event_frame = (
     full_frame_event[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
     .set_index("created_time")
     .groupby("word")
-    .resample("1s")
+    .resample("10s")
     .agg(no_price=("no_price_dollars", "last"), yes_price=("yes_price_dollars", "last"))
     .ffill()
     .reset_index("created_time")
@@ -229,5 +229,3 @@ summary = pd.DataFrame(
 ).T
 
 summary
-
-plot_acf(results["OIL"].resid, lags=30)
