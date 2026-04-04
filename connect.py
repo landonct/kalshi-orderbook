@@ -6,8 +6,6 @@ import numpy as np
 import requests
 import seaborn as sns
 import statsmodels.formula.api as smf
-from statsmodels.graphics.tsaplots import plot_acf
-import math
 
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
@@ -201,8 +199,11 @@ data_joined = event_frame.merge(
 
 data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
 data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
+data_joined["ofi_thres"] = data_joined.groupby("word").apply(
+    lambda group: 3 * np.sqrt(group["ofi"].var())
+)
 
-nw_lags = math.floor(4 * (3450 / 100) ** (2 / 9))
+nw_lags = np.floor(4 * (3450 / 100) ** (2 / 9))
 
 results = data_joined.groupby("word").apply(
     lambda group: smf.ols("price_diff ~ ofi", data=group).fit(
