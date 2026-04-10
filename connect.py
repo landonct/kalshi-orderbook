@@ -193,9 +193,19 @@ event_frame = (
     .reset_index("created_time")
 )
 
+event_frame = event_frame.loc["STAG"]
+
 data_joined = event_frame.merge(
     ofi_data.reset_index("created_time"), on=["word", "created_time"]
 )
+
+fig, ax = plt.subplots()
+sns.lineplot(data=data_joined, x="created_time", y="yes_price", ax=ax)
+plt.show()
+
+fig, ax = plt.subplots()
+sns.lineplot(data=data_joined, x="created_time", y="ofi", ax=ax)
+plt.show()
 
 data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
 data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
