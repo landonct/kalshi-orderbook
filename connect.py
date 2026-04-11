@@ -37,11 +37,11 @@ def ofi(df: pd.DataFrame, period: str) -> pd.DataFrame:
     return agg_df
 
 
-def get_market(series_ticker: str) -> list[dict]:
+def get_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     """Queries the Kalshi markets API to get all the current market data
     Returns a JSON"""
     url = f"{BASEURL}/markets"
-    params = {"series_ticker": TICKER, "limit": 100}
+    params = {"series_ticker": TICKER, "limit": LIM}
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()["markets"]
@@ -83,7 +83,7 @@ def get_trades(ticker: str) -> pd.DataFrame:
     return df
 
 
-markets = get_market(TICKER)
+markets = get_market(TICKER, LIM=250)
 print(f"Found {len(markets)} in {TICKER}")
 
 all_market_trades = {}
