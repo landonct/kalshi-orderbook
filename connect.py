@@ -15,9 +15,31 @@ def summary_stat(df: pd.DataFrame) -> pd.DataFrame:
     pass
 
 
-def ofi(df: pd.DataFrame, period: str) -> pd.DataFrame:
+def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
+    """This function takes the Kalshi market data and
+    adds a column of signed (if abs=False) order flow imbalance
+    for each word
+
+    Args:
+        df (pd.DataFrame): pandas.DataFrame containing a column 'word', for grouping
+        and a column with 'count_fp' and a 'taker_side' column
+
+        period (str): Valid period to resample the data to compute the OFI across that
+        period of time
+
+        abs (bool): Return signed or unsigned OFI
+
+    Raises:
+        ValueError: If 'word' column is not found, raise a value error
+
+    Returns:
+        pd.DataFrame: Returns a resampled pandas.DataFrame at frequency 'period' with
+        signed, if abs=False
+    """
     if "word" not in df.columns:
-        raise ValueError(f"Column 'word' not found in {df.columns}")
+        raise ValueError(
+            f"Column 'word' not found in {df.columns}, cannot group the data"
+        )
 
     grouped_df = (
         df.set_index("created_time").groupby(["word", "taker_side"]).resample(period)
@@ -34,20 +56,39 @@ def ofi(df: pd.DataFrame, period: str) -> pd.DataFrame:
         ofi=("signed_volume", "sum")
     )
 
+    if abs:
+        agg_df["ofi"] = agg_df["ofi"].abs()
+
     return agg_df
 
 
 def get_market(series_ticker: str, LIM: int = 100) -> list[dict]:
-    """Queries the Kalshi markets API to get all the current market data
-    Returns a JSON"""
+    """Pulls all the market tickers from the Kalshi API
+
+    Args:
+        series_ticker (str): Queries the Kalshi API using ticker
+        series_ticker
+        LIM (int, optional): Number of markets to pull. Defaults to 100.
+
+    Returns:
+        list[dict]: List of the market names pulled from the API
+    """
     url = f"{BASEURL}/markets"
-    params = {"series_ticker": TICKER, "limit": LIM}
+    params = {"series_ticker": series_ticker, "limit": LIM}
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()["markets"]
 
 
 def get_trades(ticker: str) -> pd.DataFrame:
+    """Pull orderbook trades for each ticker, typically tickers are from get_markets
+
+    Args:
+        ticker (str): Market ticker from Kalshi API
+
+    Returns:
+        pd.DataFrame: Contains each trade, along with other data about the contracts
+    """
     url = f"{BASEURL}/markets/trades"
     all_trades = []
     cursor = None
@@ -83,9 +124,12 @@ def get_trades(ticker: str) -> pd.DataFrame:
     return df
 
 
+# Pull all market tickers for TICKER base ticker
 markets = get_market(TICKER, LIM=250)
 print(f"Found {len(markets)} in {TICKER}")
 
+# Pull all trades from markets into a dictionary of ticker: pandas.DataFrame
+# for each market with all trades
 all_market_trades = {}
 for market in markets:
     ticker = market["ticker"]
@@ -94,94 +138,28 @@ for market in markets:
     print(f"    Found {len(market_trade)} trades")
     all_market_trades[ticker] = market_trade
 
+# Take the dict into a dataframe with the ticker
 full_frame = pd.DataFrame()
 for key, value in all_market_trades.items():
     full_frame = pd.concat([full_frame, value])
 
+full_frame = full_frame.reset_index(drop=True)
+
+# Extract the strike word from the ticker
 word = full_frame["ticker"].str.extract(r"(?<=-)(\w+)$").squeeze()
 full_frame.insert(0, "word", word)
 
-full_frame["word"].sort_values().unique()
+# Extract the full array of words
+array_of_words = full_frame["word"].sort_values().unique()
 
-full_frame_filtered = full_frame[full_frame["word"] == "CRED"].copy()
-mask = full_frame_filtered.columns.str.contains(r"dollars|fp")
-full_frame_filtered[full_frame_filtered.columns[mask]] = full_frame_filtered.loc[
-    :, mask
-].apply(pd.to_numeric)
-sns.lineplot(data=full_frame_filtered, x="created_time", y="yes_price_dollars")
-
-df_volume = (
-    full_frame[
-        (full_frame["yes_price_dollars"] < 0.8)
-        & (full_frame["yes_price_dollars"] > 0.2)
-    ]
-    .groupby("word")
-    .agg(volume=("count_fp", "sum"))
-    .sort_values(by="volume", ascending=False)
-    .reset_index()
-)
-top_3_volume = df_volume["word"].head(3).to_list()
-filtered_top_3_volume = full_frame[full_frame["word"].isin(top_3_volume)]
-
-fig, ax = plt.subplots()
-sns.lineplot(
-    data=filtered_top_3_volume, x="created_time", y="yes_price_dollars", hue="word"
-)
-plt.show()
-
-filtered_top_3_volume.set_index("created_time").resample("5min").last().ffill()
-
-data_agg = (
-    full_frame.groupby(["ticker", "word"])
-    .agg(count=("trade_id", "count"))
-    .sort_values("count", ascending=False)
-)
-
-data_plot = (
-    full_frame[
-        (full_frame["ticker"].str.contains(rf"{TICKER}-26MAR"))
-        & (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
-    ][["created_time", "word", "yes_price_dollars"]]
-    .set_index("created_time")
-    .groupby("word")
-    .resample("1s")
-    .mean()
-    .reset_index()
-    .ffill()
-)
-
-data_plot_filtered = data_plot[data_plot["word"].isin(["PAND", "TRAD", "PROJ"])]
-data_plot["diff"] = data_plot.groupby("word")["yes_price_dollars"].diff().dropna()
-data_plot["max_diff"] = data_plot.groupby("word")["diff"].transform("max")
-data_plot_filtered = data_plot[data_plot["max_diff"].abs() > 0.2]
-
-fig, ax = plt.subplots()
-sns.lineplot(
-    data=data_plot_filtered.groupby("word").filter(
-        lambda group: (group["yes_price_dollars"] < 0.99).all()
-    ),  # data_plot_filtered[data_plot_filtered["yes_price_dollars"] < .99],
-    x="created_time",
-    y="yes_price_dollars",
-    hue="word",
-    legend=True,
-    ax=ax,
-)
-plt.show()
-
-full_frame.to_csv("full_frame.csv")
-
+# Set up the dataframe filtered to the press conference
 full_frame_event = full_frame[
     (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
     & (full_frame["created_time"] <= pd.Timestamp("2026-03-18 19:29:00", tz="UTC"))
-]
-ofi_data = ofi(full_frame_event, "1s")
+].reset_index(drop=True)
 
-ofi_plot = ofi_data.reset_index().set_index("created_time").resample("1s")
-
-fig, ax = plt.subplots()
-sns.lineplot(data=ofi_data, x="created_time", y="ofi", hue="word", legend=False, ax=ax)
-ax.set_ylim(bottom=-2000, top=2000)
-plt.show()
+# Get unsigned OFI data
+ofi_data = ofi(full_frame_event, "1s", abs=False)
 
 event_frame = (
     full_frame_event[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
@@ -193,37 +171,32 @@ event_frame = (
     .reset_index("created_time")
 )
 
-event_frame = event_frame.loc["STAG"]
-
 data_joined = event_frame.merge(
     ofi_data.reset_index("created_time"), on=["word", "created_time"]
 )
 
-fig, ax = plt.subplots()
-sns.lineplot(data=data_joined, x="created_time", y="yes_price", ax=ax)
-plt.show()
-
-fig, ax = plt.subplots()
-sns.lineplot(data=data_joined, x="created_time", y="ofi", ax=ax)
-plt.show()
-
 data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
 data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
 data_joined["ofi_thresh"] = data_joined.groupby("word").apply(
-    lambda group: 3 * np.sqrt(group["ofi"].var())
+    lambda group: 3 * np.sqrt(group[group["ofi"] > 0][["ofi"]].var())
 )
 data_joined = data_joined.reset_index()
 
+yes_thresh = 0.9
 data_window = pd.DataFrame()
-for word in data_joined.reset_index()["word"].unique():
+for word in data_joined["word"].unique():
     count = 1
     data_join_word = data_joined[data_joined["word"] == word]
     spike_times = data_join_word[
-        data_join_word["ofi"].abs() > data_join_word["ofi_thresh"]
+        (data_join_word["ofi"] > data_join_word["ofi_thresh"])
     ]["created_time"].reset_index(drop=True)
     for spike in spike_times:
         data_spike = data_join_word.set_index("created_time").loc[
             spike - pd.Timedelta("20s") : spike + pd.Timedelta("5s")
+        ]
+        data_spike = data_spike[
+            (data_spike["yes_price"] < yes_thresh)
+            & (data_spike["no_price"] < yes_thresh)
         ]
         data_spike["window_num"] = count
         count += 1
