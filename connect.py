@@ -80,7 +80,7 @@ def get_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     return response.json()["markets"]
 
 
-def get_trades(ticker: str) -> pd.DataFrame:
+def get_trades(ticker: str, depth: int = 0) -> pd.DataFrame:
     """Pull orderbook trades for each ticker, typically tickers are from get_markets
 
     Args:
@@ -93,7 +93,7 @@ def get_trades(ticker: str) -> pd.DataFrame:
     all_trades = []
     cursor = None
     while True:
-        params = {"ticker": ticker, "limit": 1000}
+        params = {"ticker": ticker, "limit": 1000, "depth": depth}
         if cursor:
             params["cursor"] = cursor
 
