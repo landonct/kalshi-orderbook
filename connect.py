@@ -7,7 +7,13 @@ import numpy as np
 # import seaborn as sns
 import statsmodels.formula.api as smf
 import functions
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY")
+PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH")
+PRIVATE_KEY = functions.load_private_key(PRIVATE_KEY_PATH)
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
 
@@ -17,9 +23,11 @@ print(f"Found {len(markets)} in {TICKER}")
 
 # Pull all trades from markets into a dictionary of ticker: pandas.DataFrame
 # for each market with all trades
+all_tickers = pd.Series()
 all_market_trades = {}
 for market in markets:
     ticker = market["ticker"]
+    all_tickers = pd.concat([all_tickers, pd.Series(ticker)])
     print(f"Getting trades for {ticker}")
     market_trade = functions.get_trades(ticker)
     print(f"    Found {len(market_trade)} trades")
@@ -118,3 +126,6 @@ summary = pd.DataFrame(
 ).T
 
 summary[summary["sig"]]
+
+all_tickers_filter = all_tickers[all_tickers.str.contains(r"-26APR-")]
+functions.get_all_orderbooks(all_tickers_filter, PRIVATE_KEY, KALSHI_ACCESS_KEY)

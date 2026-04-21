@@ -1,10 +1,94 @@
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 import pandas as pd
 import time
 import numpy as np
 import requests
+import base64
+import datetime
+from urllib.parse import urlparse
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import padding
+
 
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
+
+
+def load_private_key(key_path):
+    with open(key_path, "rb") as f:
+        return serialization.load_pem_private_key(
+            f.read(), password=None, backend=default_backend()
+        )
+
+
+def sign_request(private_key, timestamp, method, path):
+    # Strip query parameters from path before signing
+    path_without_query = path.split("?")[0]
+
+    # Create the message to sign
+    message = f"{timestamp}{method}{path_without_query}".encode("utf-8")
+
+    # Sign with RSA-PSS
+    signature = private_key.sign(
+        message,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.DIGEST_LENGTH
+        ),
+        hashes.SHA256(),
+    )
+
+    # Return base64 encoded
+    return base64.b64encode(signature).decode("utf-8")
+
+
+def create_signature(private_key, timestamp, method, path):
+    """Create the request signature."""
+    # Strip query parameters before signing
+    path_without_query = path.split("?")[0]
+    message = f"{timestamp}{method}{path_without_query}".encode("utf-8")
+    signature = private_key.sign(
+        message,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.DIGEST_LENGTH
+        ),
+        hashes.SHA256(),
+    )
+    return base64.b64encode(signature).decode("utf-8")
+
+
+def get(private_key, api_key_id, path, params=None, base_url=BASEURL):
+    """Make an authenticated GET request to the Kalshi API."""
+    timestamp = str(int(datetime.datetime.now().timestamp() * 1000))
+    # Signing requires the full URL path from root (e.g. /trade-api/v2/portfolio/balance)
+    sign_path = urlparse(base_url + path).path
+    signature = create_signature(private_key, timestamp, "GET", sign_path)
+
+    headers = {
+        "KALSHI-ACCESS-KEY": api_key_id,
+        "KALSHI-ACCESS-SIGNATURE": signature,
+        "KALSHI-ACCESS-TIMESTAMP": timestamp,
+    }
+
+    return requests.get(base_url + path, headers=headers, params=params)
+
+
+def get_all_orderbooks(
+    tickers: list,
+    PRIVATE_KEY: RSAPrivateKey,
+    KALSHI_ACCESS_KEY: str,
+    base_url="/markets/orderbooks",
+):
+    if len(tickers) > 100:
+        raise AttributeError("Too many tickers, maximum 100")
+    response = get(
+        private_key=PRIVATE_KEY,
+        api_key_id=KALSHI_ACCESS_KEY,
+        path=base_url,
+        params={"tickers": tickers},
+    )
+
+    return response.json()
 
 
 def summary_stat(df: pd.DataFrame) -> pd.DataFrame:
