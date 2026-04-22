@@ -160,7 +160,7 @@ def get_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     return response.json()["markets"]
 
 
-def get_trades(ticker: str, depth: int = 0) -> pd.DataFrame:
+def get_trades(ticker: str, BASEURL: str, depth: int = 0) -> pd.DataFrame:
     """Pull orderbook trades for each ticker, typically tickers are from get_markets
 
     Args:
@@ -218,6 +218,68 @@ def get_orderbook(ticker: str, depth: int = 0) -> pd.DataFrame:
     cursor = None
     while True:
         params = {"ticker": ticker, "limit": 1000, "depth": depth}
+        if cursor:
+            params["cursor"] = cursor
+
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        trades = data.get("trades", [])
+        if not trades:
+            print("No trades")
+            break
+
+        all_trades.extend(trades)
+        cursor = data.get("cursor")
+        if not cursor:
+            break
+
+        time.sleep(0.1)
+
+    if not all_trades:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(all_trades)
+    df["created_time"] = pd.to_datetime(df["created_time"])
+    df = df.sort_values("created_time").reset_index(drop=True)
+    mask = df.columns.str.contains(r"dollars|fp")
+    df[df.columns[mask]] = df.loc[:, mask].apply(pd.to_numeric)
+    return df
+ 
+
+def get_historical_market(series_ticker: str, LIM: int = 100) -> list[dict]:
+    """Pulls all the market tickers from the Kalshi API
+
+    Args:
+        series_ticker (str): Queries the Kalshi API using ticker
+        series_ticker
+        LIM (int, optional): Number of markets to pull. Defaults to 100.
+
+    Returns:
+        list[dict]: List of the market names pulled from the API
+    """
+    url = f"{BASEURL}/historical/markets"
+    params = {"series_ticker": series_ticker, "limit": LIM}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()["markets"]
+
+
+def get_historical_trades(ticker: str,  max_ts: int, BASEURL: str, limit: int=1000):
+    """Pull orderbook trades for each ticker, typically tickers are from get_markets
+
+    Args:
+        ticker (str): Market ticker from Kalshi API
+
+    Returns:
+        pd.DataFrame: Contains each trade, along with other data about the contracts
+    """
+    url = f"{BASEURL}/historical/trades"
+    all_trades = []
+    cursor = None
+    while True:
+        params = {"ticker": ticker, "limit": limit, "max_ts": max_ts}
         if cursor:
             params["cursor"] = cursor
 

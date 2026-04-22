@@ -1,6 +1,7 @@
 # TODO: Chart the series and simulate the orderbook
 import pandas as pd
-
+import datetime
+import re
 # import matplotlib.pyplot as plt
 import numpy as np
 
@@ -10,13 +11,16 @@ import functions
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(".env")
 KALSHI_ACCESS_KEY = os.getenv("KALSHI_ACCESS_KEY")
 PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH")
 PRIVATE_KEY = functions.load_private_key(PRIVATE_KEY_PATH)
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
+MARCH_FOMC = datetime.datetime(2026, 3, 19, 00, 00, 00)
 
+FOMC_CAL_STR = "<ul><li>/monetarypolicy/fomcpresconf20260318.htm</li><li>/monetarypolicy/fomcpressconf20260128.htm</li><li>/monetarypolicy/fomcpresconf20251210.htm</li><li>/monetarypolicy/fomcpresconf20251029.htm</li><li>/monetarypolicy/fomcpresconf20250917.htm</li><li>/monetarypolicy/fomcpresconf20250730.htm</li><li>/monetarypolicy/fomcpresconf20250618.htm</li><li>/monetarypolicy/fomcpresconf20250507.htm</li><li>/monetarypolicy/fomcpresconf20250319.htm</li>"
+re.sub(r"<.*?>", "", FOMC_CAL_STR)
 # Pull all market tickers for TICKER base ticker
 markets = functions.get_market(TICKER, LIM=250)
 print(f"Found {len(markets)} in {TICKER}")
@@ -33,10 +37,29 @@ for market in markets:
     print(f"    Found {len(market_trade)} trades")
     all_market_trades[ticker] = market_trade
 
+markets_hist = functions.get_historical_market(TICKER, LIM=1000)
+print(f"Found {len(markets_hist)} in {TICKER}")
+
+all_tickers_hist = pd.Series()
+all_market_trades_hist = {}
+for market in markets_hist:
+    ticker = market["ticker"]
+    all_tickers = pd.concat([all_tickers_hist, pd.Series(ticker)])
+    print(f"Getting trades for {ticker}")
+    market_trade = functions.get_historical_trades(ticker, int(datetime.datetime.now().timestamp()), BASEURL)
+    print(f"    Found {len(market_trade)} trades")
+    all_market_trades_hist[ticker] = market_trade
+
 # Take the dict into a dataframe with the ticker
 full_frame = pd.DataFrame()
 for key, value in all_market_trades.items():
     full_frame = pd.concat([full_frame, value])
+
+full_frame_hist = pd.DataFrame()
+for key, value in all_market_trades_hist.items():
+    full_frame_hist = pd.concat([full_frame_hist, value])
+
+full_frame = pd.concat([full_frame, full_frame_hist])
 
 full_frame = full_frame.reset_index(drop=True)
 
@@ -129,3 +152,7 @@ summary[summary["sig"]]
 
 all_tickers_filter = all_tickers[all_tickers.str.contains(r"-26APR-")]
 functions.get_all_orderbooks(all_tickers_filter, PRIVATE_KEY, KALSHI_ACCESS_KEY)
+
+full_frame_event.groupby("word").apply(lambda group: [group.loc[0]["yes_price_dollars"], group.loc[-1]["yes_price_dollars"]])
+
+full_frame_event.loc[0]
