@@ -20,7 +20,10 @@ TICKER = "KXFEDMENTION"
 MARCH_FOMC = datetime.datetime(2026, 3, 19, 00, 00, 00)
 
 FOMC_CAL_STR = "<ul><li>/monetarypolicy/fomcpresconf20260318.htm</li><li>/monetarypolicy/fomcpressconf20260128.htm</li><li>/monetarypolicy/fomcpresconf20251210.htm</li><li>/monetarypolicy/fomcpresconf20251029.htm</li><li>/monetarypolicy/fomcpresconf20250917.htm</li><li>/monetarypolicy/fomcpresconf20250730.htm</li><li>/monetarypolicy/fomcpresconf20250618.htm</li><li>/monetarypolicy/fomcpresconf20250507.htm</li><li>/monetarypolicy/fomcpresconf20250319.htm</li>"
-re.sub(r"<.*?>", "", FOMC_CAL_STR)
+FOMC_CAL_STR = re.sub(r"<.*?>", "", FOMC_CAL_STR)
+FOMC_CAL_STR = re.sub(r"/monetarypolicy/fomcpres{1,2}conf", " ", FOMC_CAL_STR)
+FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
+
 # Pull all market tickers for TICKER base ticker
 markets = functions.get_market(TICKER, LIM=250)
 print(f"Found {len(markets)} in {TICKER}")
