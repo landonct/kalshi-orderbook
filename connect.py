@@ -2,8 +2,10 @@
 import pandas as pd
 import datetime
 import re
+
 # import matplotlib.pyplot as plt
 import numpy as np
+from zoneinfo import ZoneInfo
 
 # import seaborn as sns
 import statsmodels.formula.api as smf
@@ -17,12 +19,20 @@ PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH")
 PRIVATE_KEY = functions.load_private_key(PRIVATE_KEY_PATH)
 BASEURL = "https://api.elections.kalshi.com/trade-api/v2"
 TICKER = "KXFEDMENTION"
-MARCH_FOMC = datetime.datetime(2026, 3, 19, 00, 00, 00)
 
 FOMC_CAL_STR = "<ul><li>/monetarypolicy/fomcpresconf20260318.htm</li><li>/monetarypolicy/fomcpressconf20260128.htm</li><li>/monetarypolicy/fomcpresconf20251210.htm</li><li>/monetarypolicy/fomcpresconf20251029.htm</li><li>/monetarypolicy/fomcpresconf20250917.htm</li><li>/monetarypolicy/fomcpresconf20250730.htm</li><li>/monetarypolicy/fomcpresconf20250618.htm</li><li>/monetarypolicy/fomcpresconf20250507.htm</li><li>/monetarypolicy/fomcpresconf20250319.htm</li>"
 FOMC_CAL_STR = re.sub(r"<.*?>", "", FOMC_CAL_STR)
 FOMC_CAL_STR = re.sub(r"/monetarypolicy/fomcpres{1,2}conf", " ", FOMC_CAL_STR)
 FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
+PRESS_CONF_START = datetime.time(14, 00, 00)
+FOMC_START = [
+    datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_START)
+    for date in FOMC_CAL
+]
+FOMC_END = [
+    (date + pd.Timedelta(minutes=90)).replace(tzinfo=ZoneInfo("America/New_York"))
+    for date in FOMC_START
+]
 
 # Pull all market tickers for TICKER base ticker
 markets = functions.get_market(TICKER, LIM=250)
@@ -49,7 +59,9 @@ for market in markets_hist:
     ticker = market["ticker"]
     all_tickers = pd.concat([all_tickers_hist, pd.Series(ticker)])
     print(f"Getting trades for {ticker}")
-    market_trade = functions.get_historical_trades(ticker, int(datetime.datetime.now().timestamp()), BASEURL)
+    market_trade = functions.get_historical_trades(
+        ticker, int(datetime.datetime.now().timestamp()), BASEURL
+    )
     print(f"    Found {len(market_trade)} trades")
     all_market_trades_hist[ticker] = market_trade
 
@@ -65,6 +77,16 @@ for key, value in all_market_trades_hist.items():
 full_frame = pd.concat([full_frame, full_frame_hist])
 
 full_frame = full_frame.reset_index(drop=True)
+full_frame["created_time"] = full_frame["created_time"].dt.tz_convert(
+    "America/New_York"
+)
+
+for start, end in zip(FOMC_START, FOMC_END):
+    start = pd.to_datetime(start, utc=True).tz_convert("america/New_York")
+    end = pd.to_datetime(end, utc=True).tz_convert("america/New_York")
+
+    mask = pd.Series(False, index=full_frame.index)
+    mask |= (full_frame["created_time"] >= start) & (full_frame["created_time"] <= end)
 
 # Extract the strike word from the ticker
 word = full_frame["ticker"].str.extract(r"(?<=-)(\w+)$").squeeze()
@@ -156,6 +178,11 @@ summary[summary["sig"]]
 all_tickers_filter = all_tickers[all_tickers.str.contains(r"-26APR-")]
 functions.get_all_orderbooks(all_tickers_filter, PRIVATE_KEY, KALSHI_ACCESS_KEY)
 
-full_frame_event.groupby("word").apply(lambda group: [group.loc[0]["yes_price_dollars"], group.loc[-1]["yes_price_dollars"]])
+full_frame_event.groupby("word").apply(
+    lambda group: [
+        group.loc[0]["yes_price_dollars"],
+        group.loc[-1]["yes_price_dollars"],
+    ]
+)
 
 full_frame_event.loc[0]

@@ -160,7 +160,7 @@ def get_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     return response.json()["markets"]
 
 
-def get_trades(ticker: str, BASEURL: str, depth: int = 0) -> pd.DataFrame:
+def get_trades(ticker: str, BASEURL: str = BASEURL, depth: int = 0) -> pd.DataFrame:
     """Pull orderbook trades for each ticker, typically tickers are from get_markets
 
     Args:
@@ -246,7 +246,7 @@ def get_orderbook(ticker: str, depth: int = 0) -> pd.DataFrame:
     mask = df.columns.str.contains(r"dollars|fp")
     df[df.columns[mask]] = df.loc[:, mask].apply(pd.to_numeric)
     return df
- 
+
 
 def get_historical_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     """Pulls all the market tickers from the Kalshi API
@@ -266,7 +266,9 @@ def get_historical_market(series_ticker: str, LIM: int = 100) -> list[dict]:
     return response.json()["markets"]
 
 
-def get_historical_trades(ticker: str,  max_ts: int, BASEURL: str, limit: int=1000):
+def get_historical_trades(
+    ticker: str, max_ts: int, BASEURL: str = BASEURL, limit: int = 1000
+):
     """Pull orderbook trades for each ticker, typically tickers are from get_markets
 
     Args:
