@@ -24,7 +24,7 @@ FOMC_CAL_STR = "<ul><li>/monetarypolicy/fomcpresconf20260318.htm</li><li>/moneta
 FOMC_CAL_STR = re.sub(r"<.*?>", "", FOMC_CAL_STR)
 FOMC_CAL_STR = re.sub(r"/monetarypolicy/fomcpres{1,2}conf", " ", FOMC_CAL_STR)
 FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
-PRESS_CONF_START = datetime.time(14, 00, 00)
+PRESS_CONF_START = datetime.time(14, 30, 00)
 FOMC_START = [
     datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_START)
     for date in FOMC_CAL
@@ -77,42 +77,34 @@ for key, value in all_market_trades_hist.items():
 full_frame = pd.concat([full_frame, full_frame_hist])
 
 full_frame = full_frame.reset_index(drop=True)
-full_frame["created_time"] = full_frame["created_time"].dt.tz_convert(
-    "America/New_York"
-)
+# full_frame["created_time"] = full_frame["created_time"].dt.tz_convert(
+#     "America/New_York"
+# )
 
+mask = pd.Series(False, index=full_frame.index)
 for start, end in zip(FOMC_START, FOMC_END):
-    start = pd.to_datetime(start, utc=True).tz_convert("america/New_York")
-    end = pd.to_datetime(end, utc=True).tz_convert("america/New_York")
-
-    mask = pd.Series(False, index=full_frame.index)
+    start = pd.to_datetime(start, utc=True)
+    end = pd.to_datetime(end, utc=True)
     mask |= (full_frame["created_time"] >= start) & (full_frame["created_time"] <= end)
 
-# Extract the strike word from the ticker
-word = full_frame["ticker"].str.extract(r"(?<=-)(\w+)$").squeeze()
-full_frame.insert(0, "word", word)
+press_conf_df = full_frame[mask].copy()
+press_conf_df["created_time"] = pd.to_datetime(press_conf_df["created_time"])
+
+functions.extract_word(press_conf_df)
 
 # Extract the full array of words
-array_of_words = full_frame["word"].sort_values().unique()
+array_of_words = press_conf_df["word"].sort_values().unique()
 
-# Set up the dataframe filtered to the press conference
-full_frame_event = full_frame[
-    (full_frame["created_time"] >= pd.Timestamp("2026-03-18 18:29:00", tz="UTC"))
-    & (full_frame["created_time"] <= pd.Timestamp("2026-03-18 19:29:00", tz="UTC"))
-].reset_index(drop=True)
+press_conf_df = press_conf_df.reset_index()
+resolved_yes = press_conf_df.groupby("ticker").filter(
+    lambda x: (x.sort_values("created_time")["yes_price_dollars"].iloc[0] < 0.9)
+    & (x["yes_price_dollars"] >= 0.99).any()
+)
 
 # Get unsigned OFI data
-ofi_data = functions.ofi(full_frame_event, "1s", abs=False)
+ofi_data = functions.ofi(press_conf_df, "1s", abs=False)
 
-event_frame = (
-    full_frame_event[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
-    .set_index("created_time")
-    .groupby("word")
-    .resample("1s")
-    .agg(no_price=("no_price_dollars", "last"), yes_price=("yes_price_dollars", "last"))
-    .ffill()
-    .reset_index("created_time")
-)
+event_frame = functions.make_event_frame(press_conf_df)
 
 data_joined = event_frame.merge(
     ofi_data.reset_index("created_time"), on=["word", "created_time"]
@@ -178,11 +170,11 @@ summary[summary["sig"]]
 all_tickers_filter = all_tickers[all_tickers.str.contains(r"-26APR-")]
 functions.get_all_orderbooks(all_tickers_filter, PRIVATE_KEY, KALSHI_ACCESS_KEY)
 
-full_frame_event.groupby("word").apply(
+press_conf_df.groupby("word").apply(
     lambda group: [
         group.loc[0]["yes_price_dollars"],
         group.loc[-1]["yes_price_dollars"],
     ]
 )
 
-full_frame_event.loc[0]
+press_conf_df.loc[0]

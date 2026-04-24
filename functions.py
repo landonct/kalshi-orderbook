@@ -116,13 +116,13 @@ def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
         pd.DataFrame: Returns a resampled pandas.DataFrame at frequency 'period' with
         signed, if abs=False
     """
-    if "word" not in df.columns:
+    if "ticker" not in df.columns:
         raise ValueError(
             f"Column 'word' not found in {df.columns}, cannot group the data"
         )
 
     grouped_df = (
-        df.set_index("created_time").groupby(["word", "taker_side"]).resample(period)
+        df.set_index("created_time").groupby(["ticker", "taker_side"]).resample(period)
     )
     unsigned_agg = grouped_df.agg(volume=("count_fp", "sum")).reset_index()
 
@@ -132,7 +132,7 @@ def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
         -unsigned_agg["volume"],
     )
 
-    agg_df = unsigned_agg.groupby(["created_time", "word"]).agg(
+    agg_df = unsigned_agg.groupby(["created_time", "ticker"]).agg(
         ofi=("signed_volume", "sum")
     )
 
@@ -310,3 +310,26 @@ def get_historical_trades(
     mask = df.columns.str.contains(r"dollars|fp")
     df[df.columns[mask]] = df.loc[:, mask].apply(pd.to_numeric)
     return df
+
+
+def extract_word(df):
+    # Extract the strike word from the ticker
+    word = df["ticker"].str.extract(r"(?<=-)(\w+)$").squeeze()
+    df.insert(0, "word", word)
+
+
+def make_event_frame(df: pd.DataFrame, resample_pd: str = "1s"):
+    out = (
+        df[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
+        .set_index("created_time")
+        .groupby(["word"])
+        .resample(resample_pd)
+        .agg(
+            no_price=("no_price_dollars", "last"),
+            yes_price=("yes_price_dollars", "last"),
+        )
+        .ffill()
+        .reset_index("created_time")
+    )
+
+    return out
