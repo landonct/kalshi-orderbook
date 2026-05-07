@@ -118,7 +118,7 @@ def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
     """
     if "ticker" not in df.columns:
         raise ValueError(
-            f"Column 'word' not found in {df.columns}, cannot group the data"
+            f"Columns 'ticker' and 'taker_side' not found in {df.columns}, cannot group the data"
         )
 
     grouped_df = (
@@ -320,16 +320,17 @@ def extract_word(df):
 
 def make_event_frame(df: pd.DataFrame, resample_pd: str = "1s"):
     out = (
-        df[["word", "created_time", "no_price_dollars", "yes_price_dollars"]]
+        df[["ticker", "created_time", "no_price_dollars", "yes_price_dollars"]]
         .set_index("created_time")
-        .groupby(["word"])
+        .groupby(["ticker"])
         .resample(resample_pd)
         .agg(
             no_price=("no_price_dollars", "last"),
             yes_price=("yes_price_dollars", "last"),
         )
         .ffill()
-        .reset_index("created_time")
+        .swaplevel()
+        .sort_index()
     )
 
     return out

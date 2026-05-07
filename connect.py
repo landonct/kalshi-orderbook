@@ -1,13 +1,13 @@
 # TODO: Chart the series and simulate the orderbook
 import pandas as pd
 import datetime
+import time
 import re
-
-# import matplotlib.pyplot as plt
+from dateutil import tz
+import matplotlib.pyplot as plt
 import numpy as np
 from zoneinfo import ZoneInfo
-
-# import seaborn as sns
+import seaborn as sns
 import statsmodels.formula.api as smf
 import functions
 import os
@@ -24,7 +24,8 @@ FOMC_CAL_STR = "<ul><li>/monetarypolicy/fomcpresconf20260318.htm</li><li>/moneta
 FOMC_CAL_STR = re.sub(r"<.*?>", "", FOMC_CAL_STR)
 FOMC_CAL_STR = re.sub(r"/monetarypolicy/fomcpres{1,2}conf", " ", FOMC_CAL_STR)
 FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
-PRESS_CONF_START = datetime.time(14, 30, 00)
+TZ = tz.gettz("America/New_York")
+PRESS_CONF_START = datetime.time(14, 30, 00, tzinfo=TZ)
 FOMC_START = [
     datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_START)
     for date in FOMC_CAL
@@ -100,65 +101,59 @@ resolved_yes = press_conf_df.groupby("ticker").filter(
     lambda x: (x.sort_values("created_time")["yes_price_dollars"].iloc[0] < 0.9)
     & (x["yes_price_dollars"] >= 0.99).any()
 )
+ticker_uniq = resolved_yes["ticker"].unique()
+print(f"There are {len(ticker_uniq)} tickers that resolved to yes")
+
+sns.lineplot(
+    data=resolved_yes[
+        resolved_yes["created_time"] < pd.to_datetime("2025-05", utc=True)
+    ],
+    x="created_time",
+    y="yes_price_dollars",
+    hue="word",
+    legend=True,
+)
 
 # Get unsigned OFI data
-ofi_data = functions.ofi(press_conf_df, "1s", abs=False)
+ofi_data = functions.ofi(resolved_yes, "1s", abs=True)
 
-event_frame = functions.make_event_frame(press_conf_df)
+event_frame = functions.make_event_frame(resolved_yes)
 
-data_joined = event_frame.merge(
-    ofi_data.reset_index("created_time"), on=["word", "created_time"]
-)
+data_joined = event_frame.merge(ofi_data, on=["created_time", "ticker"]).reset_index()
 
-data_joined["price_lead"] = data_joined.groupby("word")["yes_price"].shift(-1)
-data_joined["price_diff"] = data_joined["price_lead"] - data_joined["yes_price"]
-data_joined["ofi_thresh"] = data_joined.groupby("word").apply(
-    lambda group: 3 * np.sqrt(group[group["ofi"] > 0][["ofi"]].var())
-)
-data_joined = data_joined.reset_index()
+data_joined["price_lag"] = data_joined.groupby("ticker")["yes_price"].shift(1)
+data_joined["price_diff"] = data_joined["yes_price"] - data_joined["price_lag"]
+# data_joined["ofi_thresh"] = data_joined.groupby("ticker").apply(
+#     lambda group: 3 * np.sqrt(group[group["ofi"] > 0][["ofi"]].var())
+# )
 
-yes_thresh = 0.9
-data_window = pd.DataFrame()
-for word in data_joined["word"].unique():
-    count = 1
-    data_join_word = data_joined[data_joined["word"] == word]
-    spike_times = data_join_word[
-        (data_join_word["ofi"] > data_join_word["ofi_thresh"])
-    ]["created_time"].reset_index(drop=True)
-    for spike in spike_times:
-        data_spike = data_join_word.set_index("created_time").loc[
-            spike - pd.Timedelta("20s") : spike + pd.Timedelta("5s")
-        ]
-        data_spike = data_spike[
-            (data_spike["yes_price"] < yes_thresh)
-            & (data_spike["no_price"] < yes_thresh)
-        ]
-        data_spike["window_num"] = count
-        count += 1
-        data_window = pd.concat([data_window, data_spike])
+data_model = data_joined
 
-data_model = data_window.reset_index()
+nw_lags = int(np.floor(4 * (100000 / 100) ** (2 / 9)))
 
-nw_lags = int(np.floor(4 * (30 / 100) ** (2 / 9)))
-
-results = data_model.groupby(["word", "window_num"]).apply(
-    lambda group: smf.ols("price_diff ~ ofi", data=group).fit(
+results = {
+    ticker: smf.ols("price_diff ~ ofi", data=group).fit(
         cov_type="HAC", cov_kwds={"maxlags": nw_lags}
     )
-)
+    for ticker, group in data_model.groupby("ticker")
+    if len(group) > nw_lags + 1
+}
 
 for word, result in results.items():
-    print(f"======================= Results for {word} =======================\n\n")
+    print(f"\n======================= Results for {word} =======================\n")
     print(result.summary())
+    time.sleep(1)
 
 summary = pd.DataFrame(
     {
         word: {
             "beta": result.params["ofi"],
             "pvalue": result.pvalues["ofi"],
-            "sig": result.params["ofi"]
-            / np.where(result.bse["ofi"] != 0, result.bse["ofi"], 100)
-            > 2.58,
+            "sig": (
+                abs(result.params["ofi"] / result.bse["ofi"]) > 2.58
+                if result.bse["ofi"] != 0
+                else np.NaN
+            ),
             "r2": result.rsquared,
         }
         for word, result in results.items()
