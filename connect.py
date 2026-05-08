@@ -29,7 +29,9 @@ FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
 TZ = tz.gettz("America/New_York")
 PRESS_CONF_DUR = pd.Timedelta(minutes=90)
 PRESS_CONF_START = datetime.time(14, 30, 00, tzinfo=TZ)
-PRESS_CONF_END = (pd.Timestamp.combine(pd.Timestamp.now().date(), PRESS_CONF_START) + PRESS_CONF_DUR).timetz()
+PRESS_CONF_END = (
+    pd.Timestamp.combine(pd.Timestamp.now().date(), PRESS_CONF_START) + PRESS_CONF_DUR
+).timetz()
 FOMC_START = [
     datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_START)
     for date in FOMC_CAL
@@ -130,24 +132,54 @@ sns.lineplot(
 
 data_model = resolved_yes.copy().reset_index(drop=True)
 
-data_model                     = data_model.groupby(["ticker", "created_time"]).agg(
-    count_fp=("count_fp", "sum"),
-    no_price_dollars=("no_price_dollars", "last"),
-    yes_price_dollars=("yes_price_dollars", "last"),
-    taker_side=("taker_side", "last")
-    ).reset_index()
-data_model["trade_imbalance"]  = np.where(data_model["taker_side"] == "yes", data_model["count_fp"], -data_model["count_fp"])
-data_model["bus_date"]         = pd.to_datetime(data_model["created_time"].dt.date)
-data_model["dur_bet_trades"]   = data_model.groupby("ticker")["created_time"].transform(lambda x: (x - x.shift(1)) / PRESS_CONF_DUR)
-data_model["price_diff"]       = data_model.groupby("ticker")["yes_price_dollars"].transform(lambda x: x - x.shift(1))
-data_model["implied_ask"]      = data_model.groupby("ticker")[["yes_price_dollars", "taker_side"]].transform(lambda x: np.where(x["taker_side"] == "yes", x["yes_price_dollars"], np.nan))
+data_model = (
+    data_model.groupby(["ticker", "created_time"])
+    .agg(
+        count_fp=("count_fp", "sum"),
+        no_price_dollars=("no_price_dollars", "last"),
+        yes_price_dollars=("yes_price_dollars", "last"),
+        taker_side=("taker_side", "last"),
+    )
+    .reset_index()
+)
+data_model["implied_ask"] = (
+    data_model.groupby("ticker")["yes_price_dollars"]
+    .transform(
+        lambda x: np.where(data_model.loc[x.index, "taker_side"] == "yes", x, np.nan)
+    )
+    .ffill()
+)
+data_model["implied_bid"] = (
+    data_model.groupby("ticker")["yes_price_dollars"]
+    .transform(
+        lambda x: np.where(data_model.loc[x.index, "taker_side"] == "no", x, np.nan)
+    )
+    .ffill()
+)
+data_model = data_model.dropna()
+data_model["implied_quote"] = (
+    data_model["implied_ask"] + data_model["implied_bid"]
+) / 2
+data_model["trade_imbalance"] = np.where(
+    data_model["taker_side"] == "yes", data_model["count_fp"], -data_model["count_fp"]
+)
+data_model["bus_date"] = pd.to_datetime(data_model["created_time"].dt.date)
+data_model["dur_bet_trades"] = data_model.groupby("ticker")["created_time"].transform(
+    lambda x: (x - x.shift(1)) / PRESS_CONF_DUR
+)
+data_model["price_diff"] = data_model.groupby("ticker")["implied_quote"].transform(
+    lambda x: x - x.shift(1)
+)
 
-nw_lags = int(np.floor(4 * (data_model.groupby("ticker").size().mean() / 100) ** (2 / 9)))
+nw_lags = int(
+    np.floor(4 * (data_model.groupby("ticker").size().mean() / 100) ** (2 / 9))
+)
 
 results = {
-    ticker: smf.ols("price_diff ~ trade_imbalance + dur_bet_trades + trade_imbalance * dur_bet_trades", data=group).fit(
-        cov_type="HAC", cov_kwds={"maxlags": nw_lags}
-    )
+    ticker: smf.ols(
+        "price_diff ~ trade_imbalance + dur_bet_trades + trade_imbalance * dur_bet_trades",
+        data=group,
+    ).fit(cov_type="HAC", cov_kwds={"maxlags": nw_lags})
     for ticker, group in data_model.groupby("ticker")
     if len(group) > nw_lags + 1
 }
@@ -163,7 +195,8 @@ summary = pd.DataFrame(
             "beta": result.params["trade_imbalance"],
             "pvalue": result.pvalues["trade_imbalance"],
             "sig": (
-                abs(result.params["trade_imbalance"] / result.bse["trade_imbalance"]) > 2.58
+                abs(result.params["trade_imbalance"] / result.bse["trade_imbalance"])
+                > 2.58
                 if result.bse["trade_imbalance"] != 0
                 else np.NaN
             ),
