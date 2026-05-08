@@ -95,7 +95,7 @@ def summary_stat(df: pd.DataFrame) -> pd.DataFrame:
     pass
 
 
-def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
+def ofi(df: pd.DataFrame, period: str = None, abs: bool = False) -> pd.DataFrame:
     """This function takes the Kalshi market data and
     adds a column of signed (if abs=False) order flow imbalance
     for each word
@@ -121,9 +121,7 @@ def ofi(df: pd.DataFrame, period: str, abs: bool = False) -> pd.DataFrame:
             f"Columns 'ticker' and 'taker_side' not found in {df.columns}, cannot group the data"
         )
 
-    grouped_df = (
-        df.set_index("created_time").groupby(["ticker", "taker_side"]).resample(period)
-    )
+    grouped_df = df.set_index("created_time").groupby(["ticker", "taker_side"]).resample(period) if period is not None else df.groupby(["ticker", "taker_side"])
     unsigned_agg = grouped_df.agg(volume=("count_fp", "sum")).reset_index()
 
     unsigned_agg["signed_volume"] = np.where(
@@ -318,7 +316,7 @@ def extract_word(df):
     df.insert(0, "word", word)
 
 
-def make_event_frame(df: pd.DataFrame, resample_pd: str = "1s"):
+def make_event_frame(df: pd.DataFrame, resample_pd: str = None):
     out = (
         df[["ticker", "created_time", "no_price_dollars", "yes_price_dollars"]]
         .set_index("created_time")

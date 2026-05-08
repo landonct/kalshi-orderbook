@@ -1,4 +1,6 @@
 # TODO: Chart the series and simulate the orderbook
+from requests import HTTPError
+from pandas.io.formats import printing
 import pandas as pd
 import datetime
 import time
@@ -47,7 +49,12 @@ for market in markets:
     ticker = market["ticker"]
     all_tickers = pd.concat([all_tickers, pd.Series(ticker)])
     print(f"Getting trades for {ticker}")
-    market_trade = functions.get_trades(ticker)
+
+    try:
+        market_trade = functions.get_trades(ticker)
+    except HTTPError:
+        print("an error occured")
+
     print(f"    Found {len(market_trade)} trades")
     all_market_trades[ticker] = market_trade
 
@@ -60,9 +67,14 @@ for market in markets_hist:
     ticker = market["ticker"]
     all_tickers = pd.concat([all_tickers_hist, pd.Series(ticker)])
     print(f"Getting trades for {ticker}")
-    market_trade = functions.get_historical_trades(
-        ticker, int(datetime.datetime.now().timestamp()), BASEURL
-    )
+
+    try:
+        market_trade = functions.get_historical_trades(
+            ticker, int(datetime.datetime.now().timestamp()), BASEURL
+        )
+    except HTTPError:
+        print("an error occured")
+
     print(f"    Found {len(market_trade)} trades")
     all_market_trades_hist[ticker] = market_trade
 
@@ -96,7 +108,7 @@ functions.extract_word(press_conf_df)
 # Extract the full array of words
 array_of_words = press_conf_df["word"].sort_values().unique()
 
-press_conf_df = press_conf_df.reset_index()
+press_conf_df = press_conf_df.reset_index(drop=True)
 resolved_yes = press_conf_df.groupby("ticker").filter(
     lambda x: (x.sort_values("created_time")["yes_price_dollars"].iloc[0] < 0.9)
     & (x["yes_price_dollars"] >= 0.99).any()
