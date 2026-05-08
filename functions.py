@@ -332,3 +332,6 @@ def make_event_frame(df: pd.DataFrame, resample_pd: str = None):
     )
 
     return out
+
+def onebx(x):
+    return (1 / x) if x != 0 else (np.inf)

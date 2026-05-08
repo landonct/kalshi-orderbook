@@ -27,14 +27,16 @@ FOMC_CAL_STR = re.sub(r"<.*?>", "", FOMC_CAL_STR)
 FOMC_CAL_STR = re.sub(r"/monetarypolicy/fomcpres{1,2}conf", " ", FOMC_CAL_STR)
 FOMC_CAL = re.sub(r"\.htm", "", FOMC_CAL_STR).strip().split(" ")
 TZ = tz.gettz("America/New_York")
+PRESS_CONF_DUR = pd.Timedelta(minutes=90)
 PRESS_CONF_START = datetime.time(14, 30, 00, tzinfo=TZ)
+PRESS_CONF_END = (pd.Timestamp.combine(pd.Timestamp.now().date(), PRESS_CONF_START) + PRESS_CONF_DUR).timetz()
 FOMC_START = [
     datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_START)
     for date in FOMC_CAL
 ]
 FOMC_END = [
-    (date + pd.Timedelta(minutes=90)).replace(tzinfo=ZoneInfo("America/New_York"))
-    for date in FOMC_START
+    datetime.datetime.combine(pd.to_datetime(date, format="%Y%m%d"), PRESS_CONF_END)
+    for date in FOMC_CAL
 ]
 
 # Pull all market tickers for TICKER base ticker
@@ -126,25 +128,24 @@ sns.lineplot(
     legend=True,
 )
 
-# Get unsigned OFI data
-ofi_data = functions.ofi(resolved_yes, "1s", abs=True)
+data_model = resolved_yes.copy().reset_index(drop=True)
 
-event_frame = functions.make_event_frame(resolved_yes)
+data_model                     = data_model.groupby(["ticker", "created_time"]).agg(
+    count_fp=("count_fp", "sum"),
+    no_price_dollars=("no_price_dollars", "last"),
+    yes_price_dollars=("yes_price_dollars", "last"),
+    taker_side=("taker_side", "last")
+    ).reset_index()
+data_model["trade_imbalance"]  = np.where(data_model["taker_side"] == "yes", data_model["count_fp"], -data_model["count_fp"])
+data_model["bus_date"]         = pd.to_datetime(data_model["created_time"].dt.date)
+data_model["dur_bet_trades"]   = data_model.groupby("ticker")["created_time"].transform(lambda x: (x - x.shift(1)) / PRESS_CONF_DUR)
+data_model["price_diff"]       = data_model.groupby("ticker")["yes_price_dollars"].transform(lambda x: x - x.shift(1))
+data_model["implied_ask"]      = data_model.groupby("ticker")[["yes_price_dollars", "taker_side"]].transform(lambda x: np.where(x["taker_side"] == "yes", x["yes_price_dollars"], np.nan))
 
-data_joined = event_frame.merge(ofi_data, on=["created_time", "ticker"]).reset_index()
-
-data_joined["price_lag"] = data_joined.groupby("ticker")["yes_price"].shift(1)
-data_joined["price_diff"] = data_joined["yes_price"] - data_joined["price_lag"]
-# data_joined["ofi_thresh"] = data_joined.groupby("ticker").apply(
-#     lambda group: 3 * np.sqrt(group[group["ofi"] > 0][["ofi"]].var())
-# )
-
-data_model = data_joined
-
-nw_lags = int(np.floor(4 * (100000 / 100) ** (2 / 9)))
+nw_lags = int(np.floor(4 * (data_model.groupby("ticker").size().mean() / 100) ** (2 / 9)))
 
 results = {
-    ticker: smf.ols("price_diff ~ ofi", data=group).fit(
+    ticker: smf.ols("price_diff ~ trade_imbalance + dur_bet_trades + trade_imbalance * dur_bet_trades", data=group).fit(
         cov_type="HAC", cov_kwds={"maxlags": nw_lags}
     )
     for ticker, group in data_model.groupby("ticker")
@@ -159,11 +160,11 @@ for word, result in results.items():
 summary = pd.DataFrame(
     {
         word: {
-            "beta": result.params["ofi"],
-            "pvalue": result.pvalues["ofi"],
+            "beta": result.params["trade_imbalance"],
+            "pvalue": result.pvalues["trade_imbalance"],
             "sig": (
-                abs(result.params["ofi"] / result.bse["ofi"]) > 2.58
-                if result.bse["ofi"] != 0
+                abs(result.params["trade_imbalance"] / result.bse["trade_imbalance"]) > 2.58
+                if result.bse["trade_imbalance"] != 0
                 else np.NaN
             ),
             "r2": result.rsquared,
