@@ -1,14 +1,15 @@
-# TODO: Chart the series and simulate the orderbook
+# TODO: Write a function to check if the book was swept, i.e. one trade ate all availible liquidity
+# If sweep, then check if it is still possible to trade on the swing from the question.
+# Still having trouble using regression for identification
 from requests import HTTPError
-from pandas.io.formats import printing
 import pandas as pd
 import datetime
 import time
 import re
 from dateutil import tz
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 import numpy as np
-from zoneinfo import ZoneInfo
 import seaborn as sns
 import statsmodels.formula.api as smf
 import functions
