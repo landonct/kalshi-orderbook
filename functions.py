@@ -121,7 +121,11 @@ def ofi(df: pd.DataFrame, period: str = None, abs: bool = False) -> pd.DataFrame
             f"Columns 'ticker' and 'taker_side' not found in {df.columns}, cannot group the data"
         )
 
-    grouped_df = df.set_index("created_time").groupby(["ticker", "taker_side"]).resample(period) if period is not None else df.groupby(["ticker", "taker_side"])
+    grouped_df = (
+        df.set_index("created_time").groupby(["ticker", "taker_side"]).resample(period)
+        if period is not None
+        else df.groupby(["ticker", "taker_side"])
+    )
     unsigned_agg = grouped_df.agg(volume=("count_fp", "sum")).reset_index()
 
     unsigned_agg["signed_volume"] = np.where(
@@ -333,5 +337,22 @@ def make_event_frame(df: pd.DataFrame, resample_pd: str = None):
 
     return out
 
+
 def onebx(x):
     return (1 / x) if x != 0 else (np.inf)
+
+
+def got_swept(df: pd.DataFrame):
+    filtered_df = df.sort_values("created_time")[
+        ["created_time", "ticker", "yes_price_dollars"]
+    ]
+    agg_df = filtered_df.groupby("created_time").agg(
+        created_time=("created_time", "last"),
+        ticker=("ticker", "last"),
+        yes_price_dollars=("yes_price_dollars", "last"),
+        count=("created_time", "count"),
+    )
+
+    agg_df.groupby(["ticker"])["yes_price_dollars"].transform(
+        lambda x: np.where(x >= 0.99, 1, 0)
+    )
