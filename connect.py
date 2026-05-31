@@ -1,6 +1,7 @@
 # TODO: Write a function to check if the book was swept, i.e. one trade ate all availible liquidity
 # If sweep, then check if it is still possible to trade on the swing from the question.
 # Still having trouble using regression for identification
+# Maybe instead look for a deeper market like sports and then try to use Cont OFI signals?
 from requests import HTTPError
 import pandas as pd
 import datetime
