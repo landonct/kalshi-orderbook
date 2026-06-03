@@ -209,3 +209,6 @@ __marimo__/
 secret/
 .DS_store
 *.txt
+*.db
+*.parquet
+*.json
