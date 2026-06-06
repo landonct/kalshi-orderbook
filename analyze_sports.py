@@ -59,4 +59,6 @@ data = con.execute(
 
 data
 
-data.to_json("kalshi_mlb.json")
+data.head(100).drop(["trade_id", "series_ticker", "no_price"], axis=1).to_json(
+    "../coding-practice/coding-practice/kalshi_mlb.json", orient="records", lines=True
+)
