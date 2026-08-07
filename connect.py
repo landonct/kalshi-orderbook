@@ -96,6 +96,7 @@ for key, value in all_market_trades_hist.items():
 full_frame = pd.concat([full_frame, full_frame_hist])
 
 full_frame = full_frame.reset_index(drop=True)
+full_frame.to_parquet("full_frame.parquet")
 # full_frame["created_time"] = full_frame["created_time"].dt.tz_convert(
 #     "America/New_York"
 # )
